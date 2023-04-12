@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  display: flex; 
+  padding: 0; 
+  flex-direction: column; 
+  place-items: center; 
+  width: 100vw; 
+  height: 100vh;   
+  overflow:hidden;
+}
+
+.fullscreen-enabled {
+  background: white;
+}
+
+body {
+  padding-bottom: 20px;
+}
+
+html{
+  margin:0;
+  padding:0;
+  max-height:100vh;
+  overflow:hidden;
+}
+
+/* https://www.cattocss.com/ */
+.grow {
+  transition: 0.5s, color 0.1s;
+  -webkit-transition: 0.5s, color 0.1s;
+  -moz-transition: 0.5s, color 0.1s;
+}
+
+.grow:hover {
+  transform: scale3d(1.5, 1.5, 0.3);
+  -webkit-transform: scale3d(1.5, 1.5, 0.3);
+  -moz-transform: scale3d(1.5, 1.5, 0.3);
+}
+
+.surprise {
+  animation-name: surprise;
+  -webkit-animation-name: surprise;
+  -moz-animation-name: surprise;
+  animation-duration: 0.8s;
+  -webkit-animation-duration: 0.8s;
+  -moz-animation-duration: 0.8s;
+}
+
+@keyframes surprise {
+  0% {
+    transform: rotate(0deg) scale(1, 1);
+  }
+
+  10% {
+    transform: rotate(7deg) scale(1.3, 1.3);
+  }
+
+  20% {
+    transform: rotate(-7deg) scale(1.3, 1.3);
+  }
+
+  30% {
+    transform: rotate(7deg) scale(1.3, 1.3);
+  }
+
+  40% {
+    transform: rotate(-7deg) scale(1.3, 1.3);
+  }
+
+  50% {
+    transform: rotate(7deg) scale(1.3, 1.3);
+  }
+
+  60% {
+    transform: rotate(-7deg) scale(1.3, 1.3);
+  }
+
+  70% {
+    transform: rotate(7deg) scale(1.3, 1.3);
+  }
+
+  80% {
+    transform: rotate(-7deg) scale(1.3, 1.3);
+  }
+
+  90% {
+    transform: rotate(7deg) scale(1.3, 1.3);
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1, 1);
+  }
+}
+
+.swing {
+  animation-name: swing;
+  -webkit-animation-name: swing;
+  -moz-animation-name: swing;
+  animation-duration: 1s;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+}
+
+@keyframes swing {
+  20% {
+    transform: rotate3d(0, 0, 1, 15deg);
+  }
+  40% {
+    transform: rotate3d(0, 0, 1, -10deg);
+  }
+  60% {
+    transform: rotate3d(0, 0, 1, 5deg);
+  }
+  80% {
+    transform: rotate3d(0, 0, 1, -5deg);
+  }
+  to {
+    transform: rotate3d(0, 0, 1, 0deg);
+  }
+}
+
+
+[role='tooltip'].popup-content {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 2px solid #3182CE;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  border: 2px solid #09a60f;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+    
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
