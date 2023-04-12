@@ -30,16 +30,6 @@ function Game() {
 
   const handle = useFullScreenHandle();
 
-  // token
-  // useEffect(() => {
-  //   if (!JSON.parse(window.localStorage.getItem('token')) === null) {
-  //     setToken(JSON.parse(window.localStorage.getItem('token')));
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   window.localStorage.setItem('token', JSON.stringify(token));
-  // }, [token]);
-
   // gameInfo
   useEffect(() => {
     setGameInfo(
@@ -113,7 +103,7 @@ function Game() {
   if (token)
     return (
       <>
-        <FullScreen handle={handle}>
+        <FullScreen handle={handle} className='h-screen'>
           <div className="h-screen w-screen" ref={ref}>
             <Rules />
             <SideBarMenu FullScreenHandle={handle} />

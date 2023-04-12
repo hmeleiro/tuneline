@@ -30,16 +30,40 @@ export default function Board() {
     gameInfo,
     setGameInfo,
     teamInfo,
+    setTeamInfo,
     teams,
     setTeams,
     setRandomSong,
     scollToRef,
   } = useContext(GameContext);
-  const { is_paused, is_active, togglePlay } = useContext(WebPlayerContext);
-  const [showStealPopup, setShowSteal] = useState(false);
-  const [stealTry, setStealTry] = useState(false);
-  const [showNextTeamButton, setShowNextTeamButton] = useState(false);
-  const [showSolveButton, setshowSolveButton] = useState(false);
+
+  const gameState = JSON.parse(window.localStorage.getItem('gameState'));
+
+  const { is_paused, togglePlay } = useContext(WebPlayerContext);
+  const [showStealPopup, setShowSteal] = useState(
+    gameState ? gameState.showStealPopup : false
+  );
+  const [stealTry, setStealTry] = useState(
+    gameState ? gameState.stealTry : false
+  );
+  const [showNextTeamButton, setShowNextTeamButton] = useState(
+    gameState ? gameState.showNextTeamButton : false
+  );
+  const [showSolveButton, setshowSolveButton] = useState(
+    gameState ? gameState.showSolveButton : false
+  );
+  const [rulesAlreadyShown, setRulesAlreadyShown] = useState(false);
+
+  useEffect(() => {
+    const gameState = {
+      showStealPopup: showStealPopup,
+      stealTry: stealTry,
+      showNextTeamButton: showNextTeamButton,
+      showSolveButton: showSolveButton,
+    };
+
+    window.localStorage.setItem('gameState', JSON.stringify(gameState));
+  }, [showStealPopup, stealTry, showNextTeamButton, showSolveButton]);
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -53,7 +77,7 @@ export default function Board() {
     // useSensor(PointerSensor)
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 300,
+        delay: 400,
         tolerance: 8,
       },
     })
@@ -68,9 +92,9 @@ export default function Board() {
 
   const teamColor = 'text-team' + gameInfo.currentTeam;
   return (
-    <div className="flex flex-col justify-center mt-10">
+    <div className="flex flex-col justify-center h-screen w-screen">
       {/* BOTONES DE PASAR EQUIPO Y RESOLVER */}
-      <div className="flex flex-col items-center justify-center h-[10%]">
+      <div className="flex flex-col items-center justify-center h-[10vh] mt-8">
         <div className="flex items-center">
           <p className="text-md font-bold">
             Es el turno de{' '}
@@ -81,7 +105,7 @@ export default function Board() {
         </div>
 
         {showNextTeamButton ? (
-          <div className="h-[10%]">
+          <div className="h-[10vh]">
             <Button
               onClick={handleNextTeam}
               colorScheme="green"
@@ -91,14 +115,11 @@ export default function Board() {
             </Button>
           </div>
         ) : (
-          <div className="h-[10%] invisible">
-            {' '}
-            <Button className="mt-3 mb-3">Siguiente equipo</Button>
-          </div>
+          <div className="h-[10vh]" />
         )}
 
         {showSolveButton ? (
-          <div className="h-[10%]">
+          <div className="h-[10vh]">
             <Button
               colorScheme="blue"
               onClick={handleSolve}
@@ -112,7 +133,7 @@ export default function Board() {
         )}
       </div>
 
-      <div className="flex-1 w-full h-[80%] items-center justify-center">
+      <div className="flex-1 w-full h-[80vh] items-center justify-center">
         <StealPopup
           isOpen={showStealPopup}
           handleStealTry={handleStealTry}
@@ -125,7 +146,7 @@ export default function Board() {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex flex-col h-[80%] place-content-evenly items-center">
+          <div className="flex flex-col h-[80vh] items-center">
             <Container id="0" items={teams[0]} />
             <Container
               id="1"
@@ -157,21 +178,28 @@ export default function Board() {
 
   function handleNextTeam() {
     // QUITARLE UN COMODÍN A QUIEN LO HAYA USADO
-    // setTeamInfo((prev) => {
-    //   var usedJokers = teams[gameInfo.currentTeam].filter((e) => e.hasOwnProperty("team") && e.team != gameInfo.currentTeam).map((e) => e.team)
+    setTeamInfo((prev) => {
+      var usedJokers = teams[gameInfo.currentTeam]
+        .filter(
+          (e) => e.hasOwnProperty('team') && e.team != gameInfo.currentTeam
+        )
+        .map((e) => e.team);
 
-    //   let updatedTeamInfo = [...prev]
+      console.log(usedJokers);
 
-    //   updatedTeamInfo.
+      let updatedTeamInfo = [...prev];
 
-    //   for (let i = 0; i < array.length; i++) {
-    //     const element = array[i];
+      updatedTeamInfo.map((team, i) => {
+        if (usedJokers.includes(i)) {
+          team.numberOfJokers -= 1;
+        }
+        return team;
+      });
 
-    //   }
-    //   var x = teams[gameInfo.currentTeam].filter((e) => e.hasOwnProperty("team") && e.team != gameInfo.currentTeam)
-    //   console.log(x)
+      console.log(updatedTeamInfo);
 
-    // })
+      return updatedTeamInfo;
+    });
 
     setTeams((prev) => {
       let updatedTeams = [...prev];
@@ -489,14 +517,31 @@ export default function Board() {
         return updatedTeams;
       });
 
-      if (!stealTry) {
+      // Si ningún equipo tiene comodines muestro el boton
+      // para resolver la jugada
+      const numberOfJokers = teamInfo.map((team) => team.numberOfJokers);
+      if (Math.max(...numberOfJokers) === 0) {
+        setshowSolveButton(true);
+      }
+
+      // Si no es un rebote y algún equipo tiene jokers
+      // preguntar si algún equipo quiere robar
+      if (!stealTry && Math.max(...numberOfJokers) > 0) {
         setShowSteal(true);
       }
     } else {
       if (overContainer === '0') {
         return;
       }
-      if (!stealTry) {
+      // Si ningún equipo tiene comodines muestro el boton
+      // para resolver la jugada
+      const numberOfJokers = teamInfo.map((team) => team.numberOfJokers);
+      if (Math.max(...numberOfJokers) === 0) {
+        setshowSolveButton(true);
+      }
+      // Si no es un rebote y algún equipo tiene jokers
+      // preguntar si algún equipo quiere robar
+      if (!stealTry && Math.max(...numberOfJokers) > 0) {
         setShowSteal(true);
       }
     }

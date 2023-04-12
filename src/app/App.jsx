@@ -25,31 +25,31 @@ function App() {
 
       var t = new Date();
 
-      let loggedInUser = {
+      let loginInfo = {
         access_token: params.get('access_token'),
         refresh_token: params.get('refresh_token'),
         expires_at: t.setSeconds(t.getSeconds() + params.get('expires_in')),
       };
-      console.log(loggedInUser);
+      console.log(loginInfo);
 
-      if (loggedInUser.access_token)
+      if (loginInfo.access_token)
         window.localStorage.setItem(
-          'loggedInUser',
-          JSON.stringify(loggedInUser)
+          'loginInfo',
+          JSON.stringify(loginInfo)
         );
-      setToken(loggedInUser.access_token);
-      setRefreshToken(loggedInUser.refresh_token);
+      setToken(loginInfo.access_token);
+      setRefreshToken(loginInfo.refresh_token);
     }
 
-    const loggedInUser = JSON.parse(
-      window.localStorage.getItem('loggedInUser')
+    const loginInfo = JSON.parse(
+      window.localStorage.getItem('loginInfo')
     );
 
-    if (!loggedInUser?.access_token) {
+    if (!loginInfo?.access_token) {
       getToken();
     } else {
-      setToken(loggedInUser.access_token);
-      setRefreshToken(loggedInUser.refresh_token);
+      setToken(loginInfo.access_token);
+      setRefreshToken(loginInfo.refresh_token);
     }
   }, []);
 

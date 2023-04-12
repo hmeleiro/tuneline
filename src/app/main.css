@@ -12,6 +12,10 @@
   overflow:hidden;
 }
 
+html, body, #root, #root>div {
+  height: 100%
+}
+
 .fullscreen-enabled {
   background: white;
 }

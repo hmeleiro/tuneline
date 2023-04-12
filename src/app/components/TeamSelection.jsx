@@ -48,7 +48,7 @@ function TeamSelection() {
       updatedTeamInfo.push({
         name: bandNames[bandIndex],
         color: colorPalette[i],
-        numberOfJokers: 3,
+        numberOfJokers: 0,
       });
 
       bandNames.splice(bandNames, 1);

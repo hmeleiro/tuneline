@@ -73,6 +73,34 @@ router.get('/auth/callback', async (req, res) => {
   }
 });
 
+router.get('/auth/refresh_token', async (req, res) => {
+  var refresh_token = req.body.refresh_token;
+  console.log(refresh_token)
+
+  try {
+    const response = await axios({
+      method: 'post',
+      url: 'https://accounts.spotify.com/api/token',
+      headers: {
+        Authorization:
+          'Basic ' +
+          Buffer.from(spotify_client_id + ':' + spotify_client_secret).toString(
+            'base64'
+          ),
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      data: {
+        refresh_token: refresh_token,
+        grant_type: 'refresh_token',
+      },
+    });
+
+    res.send(response.data);
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
 ///////////////////////////////////
 
 module.exports = router;
