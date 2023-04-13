@@ -65,6 +65,11 @@ export default function Board() {
     window.localStorage.setItem('gameState', JSON.stringify(gameState));
   }, [showStealPopup, stealTry, showNextTeamButton, showSolveButton]);
 
+  // useEffect(() => {
+  //   console.log(gameInfo.currentTrack)
+  //   setTrack(gameInfo.currentTrack.uri)
+  // }, [gameInfo.currentTrack])
+
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -195,8 +200,6 @@ export default function Board() {
         }
         return team;
       });
-
-      console.log(updatedTeamInfo);
 
       return updatedTeamInfo;
     });

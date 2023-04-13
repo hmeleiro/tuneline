@@ -3,16 +3,19 @@
 @tailwind utilities;
 
 #root {
-  display: flex; 
-  padding: 0; 
-  flex-direction: column; 
-  place-items: center; 
-  width: 100vw; 
-  height: 100vh;   
-  overflow:hidden;
+  display: flex;
+  padding: 0;
+  flex-direction: column;
+  place-items: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
-html, body, #root, #root>div {
+html,
+body,
+#root,
+#root > div {
   height: 100%
 }
 
@@ -24,11 +27,11 @@ body {
   padding-bottom: 20px;
 }
 
-html{
-  margin:0;
-  padding:0;
-  max-height:100vh;
-  overflow:hidden;
+html {
+  margin: 0;
+  padding: 0;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 /* https://www.cattocss.com/ */
@@ -126,7 +129,6 @@ html{
   }
 }
 
-
 [role='tooltip'].popup-content {
   display: flex;
   align-items: center;
@@ -140,12 +142,12 @@ html{
   border-radius: 50%;
   display: inline-block;
   position: relative;
-  border: 2px solid #3182CE;
+  border: 2px solid #3182ce;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
 }
 .loader::after {
-  content: '';  
+  content: '';
   box-sizing: border-box;
   position: absolute;
   left: 4px;
@@ -155,7 +157,7 @@ html{
   height: 12px;
   border-radius: 50%;
 }
-    
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
@@ -163,4 +165,4 @@ html{
   100% {
     transform: rotate(360deg);
   }
-} 
+}

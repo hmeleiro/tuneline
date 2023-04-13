@@ -10,31 +10,45 @@ const WebPlayerProvider = ({ children }) => {
   const [player, setPlayer] = useState(undefined);
   const { token } = useContext(AuthContext);
 
-  function togglePlay() {
-    player.togglePlay().then(() => {
-      console.log('Toggled playback!');
-      setPaused((prev) => !prev);
-    });
-  }
-
-  async function setTrack(track) {
-    const res = await fetch('https://api.spotify.com/v1/me/player/play', {
-      method: 'PUT',
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-      body: JSON.stringify({
-        uriS: [track],
-      }),
-    }).then(() => {
-      fetch('https://api.spotify.com/v1/me/player/pause', {
-        method: 'PUT',
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
+  function togglePlay(track) {
+    // Si no hay track simplemente alterna play/pause
+    if (!track) {
+      player.togglePlay().then(() => {
+        setPaused((prev) => !prev);
       });
+      return;
+    }
+
+    player.getCurrentState().then(async (state) => {
+      if (!state) {
+        console.error('User is not playing music through the Web Playback SDK');
+        return;
+      }
+      // Miramos si la canción que está pinchada en el reproductor
+      // es la que está en juego
+      var current_track = state.track_window.current_track;
+
+      // Si no es la misma pinchamos la que está en juego...
+      if (current_track.uri !== track.uri) {
+        fetch('https://api.spotify.com/v1/me/player/play', {
+          method: 'PUT',
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+          body: JSON.stringify({
+            uris: [track.uri],
+          }),
+        }).then(() => {
+          setPaused((prev) => !prev);
+        });
+
+        // Si es la misma simplemente alternamos play/pause
+      } else {
+        player.togglePlay().then(() => {
+          setPaused((prev) => !prev);
+        });
+      }
     });
-    console.log(res);
   }
 
   return (
@@ -49,7 +63,6 @@ const WebPlayerProvider = ({ children }) => {
         player,
         setPlayer,
         togglePlay,
-        setTrack,
       }}
     >
       {children}

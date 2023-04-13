@@ -55,6 +55,7 @@
     "express": "^4.17.1",
     "framer-motion": "^10.10.0",
     "fscreen": "^1.2.0",
+    "particlesjs": "^2.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-full-screen": "^1.1.1",

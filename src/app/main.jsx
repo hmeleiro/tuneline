@@ -9,14 +9,13 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 import './main.css';
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>  </React.StrictMode>
+  // <React.StrictMode> </React.StrictMode>
   <AuthProvider>
     <WebPlayerProvider>
       <GameProvider>
         <ChakraProvider>
-          <App/>
+          <App />
         </ChakraProvider>
       </GameProvider>
     </WebPlayerProvider>

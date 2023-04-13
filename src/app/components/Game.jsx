@@ -13,7 +13,7 @@ import SideBarMenu from './SideBarMenu';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
 function Game() {
-  const { token } = useContext(AuthContext);
+  const { token, refreshToken, getRefreshedToken, expiresAt } = useContext(AuthContext);
 
   const {
     gameInfo,
@@ -26,7 +26,7 @@ function Game() {
     setSongs,
     ref,
   } = useContext(GameContext);
-  const { is_active, setTrack } = useContext(WebPlayerContext);
+  const { is_active } = useContext(WebPlayerContext);
 
   const handle = useFullScreenHandle();
 
@@ -83,11 +83,6 @@ function Game() {
     window.localStorage.setItem('songs', JSON.stringify(songs));
   }, [songs]);
 
-  useEffect(() => {
-    console.log(gameInfo?.currentTrack?.uri);
-    setTrack(gameInfo?.currentTrack?.uri);
-  }, [gameInfo?.currentTrack]);
-
   if (token != undefined && !is_active)
     return (
       <div className="flex flex-col items-center h-screen justify-center">
@@ -105,7 +100,16 @@ function Game() {
     );
   }
 
-  if (token)
+  if (token) {
+
+    // Check para saber si ha caducado el token y refrescarlo
+    var now = new Date();
+    now = now[Symbol.toPrimitive]('number');
+
+    if (now >= expiresAt) {
+      getRefreshedToken(refreshToken);
+    } 
+
     return (
       <>
         <FullScreen handle={handle} className="h-screen">
@@ -117,6 +121,7 @@ function Game() {
         </FullScreen>
       </>
     );
+  }
 }
 
 export default Game;
