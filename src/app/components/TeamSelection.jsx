@@ -21,7 +21,7 @@ function TeamSelection() {
     '#e76f51',
   ];
 
-  const submitHandler = async (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
 
     const form = e.target;
@@ -33,15 +33,14 @@ function TeamSelection() {
     let updatedTeamInfo = [{ color: null, numberOfJokers: null }];
 
     // Establezco la primera canción oculta (elemento 1 del array Teams)
-    const currentTrack = await getRandomSong(songs);
+    const currentTrack = getRandomSong(songs);
     updatedTeams[0] = [{ ...currentTrack, team: 1 }];
 
     // Establezco las canciones iniciales para cada uno de los equipos
     for (let i = 0; i < formJson.numberOfTeams; i++) {
-      updatedTeams[i + 1] = [await getRandomSong(songs, false)].sort(
+      updatedTeams[i + 1] = [getRandomSong(songs, false)].sort(
         // Ordenamos el tuneline por año de publicacion
-        (a, b) =>
-          a.release_date.slice(0, 4) - b.release_date.slice(0, 4)
+        (a, b) => a.release_date.slice(0, 4) - b.release_date.slice(0, 4)
       );
 
       const bandIndex = Math.floor(Math.random() * bandNames.length);
@@ -71,7 +70,12 @@ function TeamSelection() {
 
   return (
     <div className="flex flex-col h-screen justify-center items-center">
-      <Text maxWidth={400} align="center" fontSize="md" className='mb-2 ml-9 mr-9'>
+      <Text
+        maxWidth={400}
+        align="center"
+        fontSize="md"
+        className="mb-2 ml-9 mr-9"
+      >
         Selecciona el número de equipos que van a jugar y se os asignará a cada
         uno un nombre aleatorio.
       </Text>

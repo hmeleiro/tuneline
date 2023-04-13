@@ -13,7 +13,7 @@ import SideBarMenu from './SideBarMenu';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
 function Game() {
-  const { token, setToken } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
 
   const {
     gameInfo,
@@ -26,7 +26,7 @@ function Game() {
     setSongs,
     ref,
   } = useContext(GameContext);
-  const { is_active } = useContext(WebPlayerContext);
+  const { is_active, setTrack } = useContext(WebPlayerContext);
 
   const handle = useFullScreenHandle();
 
@@ -83,6 +83,11 @@ function Game() {
     window.localStorage.setItem('songs', JSON.stringify(songs));
   }, [songs]);
 
+  useEffect(() => {
+    console.log(gameInfo?.currentTrack?.uri);
+    setTrack(gameInfo?.currentTrack?.uri);
+  }, [gameInfo?.currentTrack]);
+
   if (token != undefined && !is_active)
     return (
       <div className="flex flex-col items-center h-screen justify-center">
@@ -103,7 +108,7 @@ function Game() {
   if (token)
     return (
       <>
-        <FullScreen handle={handle} className='h-screen'>
+        <FullScreen handle={handle} className="h-screen">
           <div className="h-screen w-screen" ref={ref}>
             <Rules />
             <SideBarMenu FullScreenHandle={handle} />

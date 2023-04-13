@@ -1,27 +1,11 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { WebPlayerContext } from '../context/WebPlayerContext';
-import SpotifyWebApi from 'spotify-web-api-js';
-import { Button } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 
-var spotifyApi = new SpotifyWebApi();
 function SpotifyTransfer(props) {
   const { token } = props;
-  const {
-    setPaused,
-    is_active,
-    setActive,
-    is_ready,
-    setIsReady,
-    setPlayer,
-    spotify,
-    setSpotify,
-  } = useContext(WebPlayerContext);
-
-  useEffect(() => {
-    spotifyApi.setAccessToken(token);
-    setSpotify(spotifyApi);
-  }, []);
+  const { setPaused, is_active, setActive, is_ready, setIsReady, setPlayer } =
+    useContext(WebPlayerContext);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -34,7 +18,7 @@ function SpotifyTransfer(props) {
       const player = new window.Spotify.Player({
         name: 'Tuneline Game',
         getOAuthToken: (cb) => {
-          cb(props.token);
+          cb(token);
         },
         volume: 0.5,
       });
@@ -49,6 +33,18 @@ function SpotifyTransfer(props) {
       player.addListener('not_ready', ({ device_id }) => {
         console.log('Device ID has gone offline', device_id);
         setIsReady(false);
+      });
+
+      player.addListener('initialization_error', ({ message }) => {
+        console.error(message);
+      });
+
+      player.addListener('authentication_error', ({ message }) => {
+        console.error(message);
+      });
+
+      player.addListener('account_error', ({ message }) => {
+        console.error(message);
       });
 
       player.addListener('player_state_changed', (state) => {
@@ -79,22 +75,28 @@ function SpotifyTransfer(props) {
     );
   }
 
-  function transferDevice() {
-    spotify.getMyDevices(function (err, data) {
-      if (err) {
-        console.error(err);
-      } else {
-        const devices = data.devices.find((d) => d.name === 'Tuneline Game');
-        spotify.transferMyPlayback(
-          [devices?.id],
-          { play: false },
-          function (err) {
-            if (err) {
-              console.log(err);
-            }
-          }
-        );
+  async function transferDevice() {
+    // Identifico el device_id
+    const devices = await fetch(
+      'https://api.spotify.com/v1/me/player/devices',
+      {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
       }
+    );
+    const json = await devices.json();
+    const tunelineDevice = json.devices.find((d) => d.name === 'Tuneline Game');
+
+    // Transfiero la reproducción al device_id
+    fetch('https://api.spotify.com/v1/me/player', {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+      body: JSON.stringify({
+        device_ids: [tunelineDevice.id],
+      }),
     });
   }
 }

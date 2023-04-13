@@ -1,7 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const axios = require('axios');
-const querystring = require('querystring');
 
 const router = express.Router();
 
@@ -28,6 +27,7 @@ var generateRandomString = function (length) {
 
 // Authorization workflow
 router.get('/auth/login', (req, res) => {
+  console.log('Sending user to Spotify login page...', Date());
   var scope =
     'streaming user-read-email user-read-private ugc-image-upload user-read-playback-state user-modify-playback-state';
 
@@ -48,6 +48,8 @@ router.get('/auth/login', (req, res) => {
 });
 
 router.get('/auth/callback', async (req, res) => {
+  console.log('User logged in Spotify. Soliciting access_token...', Date());
+
   try {
     const response = await axios({
       method: 'post',
@@ -67,15 +69,17 @@ router.get('/auth/callback', async (req, res) => {
       },
     });
 
-    res.redirect('/?' + querystring.stringify(response.data));
+    const params = new URLSearchParams(response.data).toString();
+    console.log('Redirecting user to index...', Date());
+    res.redirect('/?' + params);
   } catch (err) {
     res.status(500).json({ message: err });
   }
 });
 
 router.get('/auth/refresh_token', async (req, res) => {
-  var refresh_token = req.body.refresh_token;
-  console.log(refresh_token)
+  var refresh_token = req.query.refresh_token;
+  console.log('Refreshing token...', Date());
 
   try {
     const response = await axios({

@@ -1,4 +1,4 @@
-import { createContext, useState, useRef} from 'react';
+import React, { createContext, useState, useRef } from 'react';
 
 export const GameContext = createContext();
 
@@ -8,7 +8,7 @@ const GameProvider = ({ children }) => {
   const [teamInfo, setTeamInfo] = useState();
   const [songs, setSongs] = useState();
 
-  const ref = useRef(null)
+  const ref = useRef(null);
   const scollToRef = useRef(null);
 
   function getRandomSong(songs, isHidden = true) {
@@ -23,7 +23,7 @@ const GameProvider = ({ children }) => {
     return song;
   }
 
-  async function setRandomSong() {
+  function setRandomSong() {
     const randomSong = getRandomSong(songs);
 
     setTeams((prev) => {
@@ -60,7 +60,7 @@ const GameProvider = ({ children }) => {
         getRandomSong,
         setRandomSong,
         ref,
-        scollToRef
+        scollToRef,
       }}
     >
       {children}

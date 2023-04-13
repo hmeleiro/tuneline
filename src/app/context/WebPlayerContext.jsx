@@ -1,4 +1,5 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 export const WebPlayerContext = createContext();
 
@@ -7,48 +8,33 @@ const WebPlayerProvider = ({ children }) => {
   const [is_active, setActive] = useState(false);
   const [is_ready, setIsReady] = useState(false);
   const [player, setPlayer] = useState(undefined);
-  const [spotify, setSpotify] = useState();
+  const { token } = useContext(AuthContext);
 
-  function togglePlay(track) {
-    // var currentlyPlaying;
-    // var isTrackCurrentlyPlaying;
-    // spotify.getMyCurrentPlayingTrack(function (err, data) {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log(data);
-    //     currentlyPlaying = data.item;
+  function togglePlay() {
+    player.togglePlay().then(() => {
+      console.log('Toggled playback!');
+      setPaused((prev) => !prev);
+    });
+  }
 
-    //     console.log(currentlyPlaying);
-
-    //     isTrackCurrentlyPlaying =
-    //       currentlyPlaying.track.uri === track.track.uri;
-
-    //     console.log(isTrackCurrentlyPlaying);
-
-    //     if (isTrackCurrentlyPlaying) {
-    //       is_paused ? spotify.play() : spotify.pause();
-    //     } else {
-    //       is_paused
-    //         ? spotify.play({ uris: [track.track.uri] })
-    //         : spotify.pause();
-    //     }
-    //   }
-    // });
-
-    if (track) {
-      is_paused
-        ? spotify.play({ uris: [track.uri] }, (err) => {
-            if (err) {
-              console.log(err);
-            }
-          })
-        : spotify.pause();
-    } else {
-      is_paused ? spotify.play() : spotify.pause();
-    }
-
-    setPaused((prev) => !prev);
+  async function setTrack(track) {
+    const res = await fetch('https://api.spotify.com/v1/me/player/play', {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+      body: JSON.stringify({
+        uriS: [track],
+      }),
+    }).then(() => {
+      fetch('https://api.spotify.com/v1/me/player/pause', {
+        method: 'PUT',
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      });
+    });
+    console.log(res);
   }
 
   return (
@@ -62,9 +48,8 @@ const WebPlayerProvider = ({ children }) => {
         setIsReady,
         player,
         setPlayer,
-        spotify,
-        setSpotify,
         togglePlay,
+        setTrack,
       }}
     >
       {children}

@@ -16,14 +16,14 @@ function SpotifyControls(props) {
           aria-label="Play music"
           icon={<Icon as={FaPlay} w={5} h={5} />}
           colorScheme="teal"
-          onClick={() => togglePlay(track)}
+          onClick={() => togglePlay()}
         />
       ) : (
         <IconButton
           aria-label="Pause music"
           icon={<Icon as={ImPause2} w={5} h={5} />}
           colorScheme="teal"
-          onClick={() => togglePlay(track)}
+          onClick={() => togglePlay()}
         />
       )}
     </div>
