@@ -11,7 +11,7 @@
     "sourceType": "module"
   },
   "plugins": ["react-hooks"],
-  "rules": {},
+  "rules": { "react/prop-types": "off" },
   "settings": {
     "react": {
       "version": "17.0"
