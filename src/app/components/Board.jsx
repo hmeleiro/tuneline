@@ -90,7 +90,6 @@ export default function Board() {
 
   useEffect(() => {
     if (scollToRef.current != null) {
-      console.log('Estoy aquí');
       scollToRef.current.scrollIntoView(true);
     }
   }, [scollToRef]);
@@ -113,7 +112,7 @@ export default function Board() {
           <div className="h-[10vh]">
             <Button
               onClick={handleNextTeam}
-              colorScheme="green"
+              colorScheme="blue"
               className="mt-3 mb-3"
             >
               Siguiente equipo

@@ -16,6 +16,8 @@ function SideBarMenu(props) {
     window.localStorage.removeItem('gameInfo');
     window.localStorage.removeItem('teams');
     window.localStorage.removeItem('teamInfo');
+    window.localStorage.removeItem('gameState');
+
     window.localStorage.setItem(
       'gameInfo',
       JSON.stringify({

@@ -1,23 +1,24 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        transparent: "transparent",
-        current: "currentColor",
-        team0: "#319795",
-        team1: "#d93636",
-        team2: "#f5b400",
-        team3: "#45a4f2",
-        team4: "#5e5b5a",
-        team5: "#a2d4f1",
-        team6: "#28af60",
-        correct: "#59cd90",
-        incorrect: "#ee6352",
+        background: '#f8f5f2',
+        transparent: 'transparent',
+        current: 'currentColor',
+        black: '#45484c',
+        team0: '#d3cd9d',
+        team1: '#76c3b7',
+        team2: '#c24a4f',
+        team3: '#d4bc40',
+        team4: '#14b249',
+        team5: '#f58e49',
+        correct: '#27da69',
+        incorrect: '#d32529',
       },
       fontSize: {
-        "2xs": "0.64rem",
+        '2xs': '0.64rem',
       },
     },
   },

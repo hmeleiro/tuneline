@@ -27,7 +27,7 @@ export function TrackCard(props) {
   if (track.isHidden) {
     return (
       <div
-        className={`${teamColors[team]} ${isCorrect} w-12 h-12 shadow-lg rounded-full landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3`}
+        className={`${teamColors[team]} ${isCorrect} w-12 h-12 shadow-xl rounded-full landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3`}
       ></div>
     );
   }
@@ -36,7 +36,7 @@ export function TrackCard(props) {
     return (
       <div
         ref={scollToRef}
-        className={`${teamColors[team]} ${isCorrect} flex shadow-2xl w-32 h-32 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-white justify-center items-center align-middle p-1 overflow-hidden`}
+        className={`${teamColors[team]} ${isCorrect} flex shadow-lg w-32 h-32 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle p-1 overflow-hidden`}
       >
         <div className="flex flex-col justify-center items-center">
           <p className="text-2xs p-1 italic">{track.track_name} </p>
@@ -49,7 +49,7 @@ export function TrackCard(props) {
 
   return (
     <div
-      className={`${teamColors[team]} ${isCorrect} flex shadow-2xl w-32 h-32 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-white justify-center items-center align-middle p-1 overflow-hidden`}
+      className={`${teamColors[team]} ${isCorrect} flex shadow-xl w-32 h-32 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle p-1 overflow-hidden`}
     >
       <div className="flex flex-col justify-center items-center">
         <p className="text-2xs p-1 italic">{track.track_name} </p>
@@ -62,11 +62,7 @@ export function TrackCard(props) {
 
 export function TrackCardOverlay(props) {
   const { id, track } = props;
-  return (
-    <div>
-      <TrackCard id={id} track={track} />
-    </div>
-  );
+  return <TrackCard id={id} track={track} />;
 }
 
 export default function SortableTrackCard(props) {
@@ -79,7 +75,13 @@ export default function SortableTrackCard(props) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className="overflow-visible"
+    >
       <TrackCard id={props.id} track={props.track} />
     </div>
   );

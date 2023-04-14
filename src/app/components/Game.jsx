@@ -12,8 +12,11 @@ import Rules from './Rules';
 import SideBarMenu from './SideBarMenu';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
+import { Navigate } from 'react-router-dom';
+
 function Game() {
-  const { token, refreshToken, getRefreshedToken, expiresAt } = useContext(AuthContext);
+  const { token, refreshToken, getRefreshedToken, expiresAt } =
+    useContext(AuthContext);
 
   const {
     gameInfo,
@@ -101,14 +104,13 @@ function Game() {
   }
 
   if (token) {
-
     // Check para saber si ha caducado el token y refrescarlo
     var now = new Date();
     now = now[Symbol.toPrimitive]('number');
 
     if (now >= expiresAt) {
       getRefreshedToken(refreshToken);
-    } 
+    }
 
     return (
       <>
@@ -122,6 +124,10 @@ function Game() {
       </>
     );
   }
+
+  // if (!window.localStorage.getItem('loginInfo')) {
+  //   return <Navigate to="/" />;
+  // }
 }
 
 export default Game;

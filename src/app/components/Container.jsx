@@ -14,9 +14,7 @@ function Container(props) {
     id,
   });
 
-  const tunelineStyles = tuneline
-    ? 'p-10 h-[65vh]'
-    : 'p-2 h-[15vh]';
+  const tunelineStyles = tuneline ? 'p-10 h-[65vh] mt-2' : 'p-4 h-[15vh] mt-6';
 
   return (
     <SortableContext
@@ -30,7 +28,7 @@ function Container(props) {
     >
       <div
         ref={setNodeRef}
-        className={`flex items-center ${tunelineStyles} h-[30vh] mt-2 mb-2 landscape:justify-center landscape:overflow-x-auto landscape:overflow-y-hidden landscape:w-[85%] portrait:flex-col portrait:overflow-y-auto portrait:overflow-x-hidden`}
+        className={`flex items-center ${tunelineStyles} h-[30vh]  mb-2 landscape:justify-center landscape:overflow-x-auto landscape:overflow-y-hidden landscape:w-[85%] portrait:flex-col portrait:overflow-y-auto portrait:overflow-x-hidden`}
       >
         {items.map((item, index) => {
           return (
