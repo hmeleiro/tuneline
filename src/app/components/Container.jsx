@@ -1,20 +1,20 @@
-import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
+import React from 'react'
+import { useDroppable } from '@dnd-kit/core'
 import {
   SortableContext,
   verticalListSortingStrategy,
-  horizontalListSortingStrategy,
-} from '@dnd-kit/sortable';
+  horizontalListSortingStrategy
+} from '@dnd-kit/sortable'
 
-import SortableTrackCard from './TrackCard';
+import SortableTrackCard from './TrackCard'
 
-function Container(props) {
-  const { id, items, tuneline } = props;
+function Container (props) {
+  const { id, items, tuneline } = props
   const { setNodeRef } = useDroppable({
-    id,
-  });
+    id
+  })
 
-  const tunelineStyles = tuneline ? 'p-10 h-[65vh] mt-2' : 'p-4 h-[15vh] mt-6';
+  const tunelineStyles = tuneline ? 'p-10 h-[65vh] mt-2' : 'p-4 h-[15vh] mt-6'
 
   return (
     <SortableContext
@@ -37,14 +37,14 @@ function Container(props) {
               id={item?.uri}
               track={item}
               disabled={
-                item.team && !item.hasOwnProperty('isCorrect') ? false : true
+                !(item.team && !Object.prototype.hasOwnProperty.call(item, 'isCorrect'))
               }
             />
-          );
+          )
         })}
       </div>
     </SortableContext>
-  );
+  )
 }
 
-export default Container;
+export default Container

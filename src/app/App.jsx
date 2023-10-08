@@ -1,44 +1,49 @@
-import React, { useContext, useEffect } from 'react';
-import { AuthContext } from './context/AuthContext';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import HomePage from './components/Homepage';
-import Game from './components/Game';
+import React, { useContext, useEffect } from 'react'
+import { AuthContext } from './context/AuthContext'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import HomePage from './components/Homepage'
+import Game from './components/Game'
+import Cookies from 'js-cookie'
 
-function App() {
+function App () {
   const { getToken, getRefreshedToken, setRefreshToken, setToken, setExpiresAt } =
-    useContext(AuthContext);
+    useContext(AuthContext)
 
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <HomePage />,
+      element: <HomePage />
     },
     {
       path: '/game',
-      element: <Game />,
-    },
-  ]);
+      element: <Game />
+    }
+  ])
 
   useEffect(() => {
-    const loginInfo = JSON.parse(window.localStorage.getItem('loginInfo'));
-
-    var now = new Date();
-    now = now[Symbol.toPrimitive]('number');
-
-    if (!loginInfo?.access_token) {
-      getToken();
-    } else {
-      if (now >= loginInfo?.expires_at) {
-        getRefreshedToken(loginInfo.refresh_token);
-      } else {
-        setToken(loginInfo.access_token);
-        setRefreshToken(loginInfo.refresh_token);
-        setExpiresAt(loginInfo.expires_at);
-      }
+    let loginInfo = {
+      access_token: Cookies.get('access_token'),
+      refresh_token: Cookies.get('refresh_token')
     }
-  }, []);
+    // let now = new Date()
+    // now = now[Symbol.toPrimitive]('number')
 
-  return <RouterProvider router={router} />;
+    if (!loginInfo?.access_token && !loginInfo.refresh_token) {
+      // console.log('No hay ni access_token ni refresh_token...')
+      getToken()
+    }
+
+    if (!loginInfo?.access_token && loginInfo.refresh_token) {
+      console.log('No hay access_token pero sí refresh_token. Refrescamos el token...')
+      loginInfo = getRefreshedToken(loginInfo.refresh_token)
+    }
+
+    setToken(loginInfo.access_token)
+    setRefreshToken(loginInfo.refresh_token)
+    setExpiresAt(loginInfo.expires_at)
+  }, [])
+
+  return <RouterProvider router={router} />
 }
 
-export default App;
+export default App

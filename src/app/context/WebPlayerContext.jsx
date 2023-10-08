@@ -1,73 +1,73 @@
-import React, { createContext, useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { createContext, useState, useContext } from 'react'
+import { AuthContext } from '../context/AuthContext'
 
-export const WebPlayerContext = createContext();
+export const WebPlayerContext = createContext()
 
 const WebPlayerProvider = ({ children }) => {
-  const [is_paused, setPaused] = useState(true);
-  const [is_active, setActive] = useState(false);
-  const [is_ready, setIsReady] = useState(false);
-  const [player, setPlayer] = useState(undefined);
-  const { token } = useContext(AuthContext);
+  const [isPaused, setPaused] = useState(true)
+  const [isActive, setActive] = useState(false)
+  const [isReady, setIsReady] = useState(false)
+  const [player, setPlayer] = useState(undefined)
+  const { token } = useContext(AuthContext)
 
-  function togglePlay(track) {
+  function togglePlay (track) {
     // Si no hay track simplemente alterna play/pause
     if (!track) {
       player.togglePlay().then(() => {
-        setPaused((prev) => !prev);
-      });
-      return;
+        setPaused((prev) => !prev)
+      })
+      return
     }
 
     player.getCurrentState().then(async (state) => {
       if (!state) {
-        console.error('User is not playing music through the Web Playback SDK');
-        return;
+        console.error('User is not playing music through the Web Playback SDK')
+        return
       }
       // Miramos si la canción que está pinchada en el reproductor
       // es la que está en juego
-      var current_track = state.track_window.current_track;
+      const currentTrack = state.track_window.current_track
 
       // Si no es la misma pinchamos la que está en juego...
-      if (current_track.uri !== track.uri) {
+      if (currentTrack.uri !== track.uri) {
         fetch('https://api.spotify.com/v1/me/player/play', {
           method: 'PUT',
           headers: {
-            Authorization: 'Bearer ' + token,
+            Authorization: 'Bearer ' + token
           },
           body: JSON.stringify({
-            uris: [track.uri],
-          }),
+            uris: [track.uri]
+          })
         }).then(() => {
-          setPaused((prev) => !prev);
-        });
+          setPaused((prev) => !prev)
+        })
 
         // Si es la misma simplemente alternamos play/pause
       } else {
         player.togglePlay().then(() => {
-          setPaused((prev) => !prev);
-        });
+          setPaused((prev) => !prev)
+        })
       }
-    });
+    })
   }
 
   return (
     <WebPlayerContext.Provider
       value={{
-        is_paused,
+        isPaused,
         setPaused,
-        is_active,
+        isActive,
         setActive,
-        is_ready,
+        isReady,
         setIsReady,
         player,
         setPlayer,
-        togglePlay,
+        togglePlay
       }}
     >
       {children}
     </WebPlayerContext.Provider>
-  );
-};
+  )
+}
 
-export default WebPlayerProvider;
+export default WebPlayerProvider

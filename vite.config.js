@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import dotenv from 'dotenv'
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+dotenv.config()
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3001 } = process.env
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,11 +13,11 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: `http://localhost:${PORT}`,
-        changeOrigin: true,
-      },
-    },
+        changeOrigin: true
+      }
+    }
   },
   build: {
-    outDir: 'dist/app',
-  },
-});
+    outDir: 'dist/app'
+  }
+})

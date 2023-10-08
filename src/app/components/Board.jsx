@@ -1,31 +1,32 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react'
 import {
   DndContext,
   DragOverlay,
   KeyboardSensor,
   MouseSensor,
-  // PointerSensor,
+  closestCorners,
   TouchSensor,
   useSensor,
   useSensors,
-} from '@dnd-kit/core';
-import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+  defaultDropAnimation
+} from '@dnd-kit/core'
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
+// import { restrictToWindowEdges } from '@dnd-kit/modifiers'
 
-import { GameContext } from '../context/GameContext';
-import { WebPlayerContext } from '../context/WebPlayerContext';
+import { GameContext } from '../context/GameContext'
+import { WebPlayerContext } from '../context/WebPlayerContext'
 
 // import SpotifyControls from './SpotifyControls';
-import StealPopup from './StealPopup';
+import StealPopup from './StealPopup'
 
-import { TrackCardOverlay } from './TrackCard';
-import Container from './Container';
-import { Button } from '@chakra-ui/react';
+import { TrackCardOverlay } from './TrackCard'
+import Container from './Container'
+import { Button } from '@chakra-ui/react'
 
 // import { IconContext } from 'react-icons';
 
-export default function Board() {
-  const [activeId, setActiveId] = useState();
+export default function Board () {
+  const [activeId, setActiveId] = useState()
   const {
     gameInfo,
     setGameInfo,
@@ -34,73 +35,72 @@ export default function Board() {
     teams,
     setTeams,
     setRandomSong,
-    scollToRef,
-  } = useContext(GameContext);
+    scollToRef
+  } = useContext(GameContext)
 
-  const gameState = JSON.parse(window.localStorage.getItem('gameState'));
+  const gameState = JSON.parse(window.localStorage.getItem('gameState'))
 
-  const { is_paused, togglePlay } = useContext(WebPlayerContext);
+  const { isPaused, togglePlay } = useContext(WebPlayerContext)
   const [showStealPopup, setShowSteal] = useState(
     gameState ? gameState.showStealPopup : false
-  );
+  )
   const [stealTry, setStealTry] = useState(
     gameState ? gameState.stealTry : false
-  );
+  )
   const [showNextTeamButton, setShowNextTeamButton] = useState(
     gameState ? gameState.showNextTeamButton : false
-  );
+  )
   const [showSolveButton, setshowSolveButton] = useState(
     gameState ? gameState.showSolveButton : false
-  );
-  const [rulesAlreadyShown, setRulesAlreadyShown] = useState(false);
+  )
+  const [rulesAlreadyShown, setRulesAlreadyShown] = useState(false)
+
+  const dropAnimation = {
+    ...defaultDropAnimation
+  }
 
   useEffect(() => {
     const gameState = {
-      showStealPopup: showStealPopup,
-      stealTry: stealTry,
-      showNextTeamButton: showNextTeamButton,
-      showSolveButton: showSolveButton,
-    };
+      showStealPopup,
+      stealTry,
+      showNextTeamButton,
+      showSolveButton
+    }
 
-    window.localStorage.setItem('gameState', JSON.stringify(gameState));
-  }, [showStealPopup, stealTry, showNextTeamButton, showSolveButton]);
-
-  // useEffect(() => {
-  //   console.log(gameInfo.currentTrack)
-  //   setTrack(gameInfo.currentTrack.uri)
-  // }, [gameInfo.currentTrack])
+    window.localStorage.setItem('gameState', JSON.stringify(gameState))
+  }, [showStealPopup, stealTry, showNextTeamButton, showSolveButton])
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 8,
-      },
+        distance: 8
+      }
     }),
     useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
+      coordinateGetter: sortableKeyboardCoordinates
     }),
     // useSensor(PointerSensor)
     useSensor(TouchSensor, {
       activationConstraint: {
         delay: 400,
-        tolerance: 8,
-      },
+        tolerance: 8
+      }
     })
-  );
+  )
 
   useEffect(() => {
     if (scollToRef.current != null) {
-      scollToRef.current.scrollIntoView(true);
+      scollToRef.current.scrollIntoView(true)
     }
-  }, [scollToRef]);
+  }, [scollToRef])
 
-  const teamColor = 'text-team' + gameInfo.currentTeam;
+  const teamColor = 'text-team' + gameInfo.currentTeam
   return (
-    <div className="flex flex-col justify-center h-screen w-screen">
+    <div className='flex flex-col justify-center h-screen w-screen'>
       {/* BOTONES DE PASAR EQUIPO Y RESOLVER */}
-      <div className="flex flex-col items-center justify-center h-[10vh] mt-8">
-        <div className="flex items-center">
-          <p className="text-md font-bold">
+      <div className='flex flex-col items-center justify-center h-[10vh] mt-8'>
+        <div className='flex items-center'>
+          <p className='text-md font-bold'>
             Es el turno de{' '}
             <span className={`${teamColor}`}>
               {teamInfo[gameInfo.currentTeam].name}
@@ -108,36 +108,40 @@ export default function Board() {
           </p>
         </div>
 
-        {showNextTeamButton ? (
-          <div className="h-[10vh]">
-            <Button
-              onClick={handleNextTeam}
-              colorScheme="blue"
-              className="mt-3 mb-3"
-            >
-              Siguiente equipo
-            </Button>
-          </div>
-        ) : (
-          <div className="h-[10vh]" />
-        )}
+        {showNextTeamButton
+          ? (
+            <div className='h-[10vh]'>
+              <Button
+                onClick={handleNextTeam}
+                colorScheme='blue'
+                className='mt-3 mb-3'
+              >
+                Siguiente equipo
+              </Button>
+            </div>
+            )
+          : (
+            <div className='h-[10vh]' />
+            )}
 
-        {showSolveButton ? (
-          <div className="h-[10vh]">
-            <Button
-              colorScheme="blue"
-              onClick={handleSolve}
-              className="mt-3 mb-3"
-            >
-              Resolver
-            </Button>
-          </div>
-        ) : (
-          ''
-        )}
+        {showSolveButton
+          ? (
+            <div className='h-[10vh]'>
+              <Button
+                colorScheme='blue'
+                onClick={handleSolve}
+                className='mt-3 mb-3'
+              >
+                Resolver
+              </Button>
+            </div>
+            )
+          : (
+              ''
+            )}
       </div>
 
-      <div className="flex-1 w-full h-[80vh] items-center justify-center">
+      <div className='flex-1 w-full h-[80vh] items-center justify-center'>
         <StealPopup
           isOpen={showStealPopup}
           handleStealTry={handleStealTry}
@@ -146,76 +150,71 @@ export default function Board() {
 
         <DndContext
           sensors={sensors}
+          collisionDetection={closestCorners}
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex flex-col h-[80vh] items-center">
-            <Container id="0" items={teams[0]} />
+          <div className='flex flex-col h-[80vh] items-center'>
+            <Container id='0' items={teams[0]} />
             <Container
-              id="1"
+              id='1'
               items={teams[gameInfo.currentTeam]}
-              tuneline={true}
+              tuneline
             />
           </div>
 
-          <DragOverlay
-            dropAnimation={{
-              duration: 500,
-              easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
-            }}
-            modifiers={[restrictToWindowEdges]}
-          >
-            {activeId ? (
-              <TrackCardOverlay
-                id={activeId}
-                track={teams[findContainer(activeId)].find(
-                  (e) => e.uri === activeId
-                )}
-              />
-            ) : null}
+          <DragOverlay dropAnimation={dropAnimation}>
+            {activeId
+              ? (
+                <TrackCardOverlay
+                  id={activeId}
+                  track={teams[findContainer(activeId)].find(
+                    (e) => e.uri === activeId
+                  )}
+                />
+                )
+              : null}
           </DragOverlay>
         </DndContext>
       </div>
     </div>
-  );
+  )
 
-  function handleNextTeam() {
+  function handleNextTeam () {
     // QUITARLE UN COMODÍN A QUIEN LO HAYA USADO
     setTeamInfo((prev) => {
-      var usedJokers = teams[gameInfo.currentTeam]
+      const usedJokers = teams[gameInfo.currentTeam]
         .filter(
-          (e) => e.hasOwnProperty('team') && e.team != gameInfo.currentTeam
+          (e) => Object.prototype.hasOwnProperty.call(e, 'team') && e.team !== gameInfo.currentTeam
         )
-        .map((e) => e.team);
+        .map((e) => e.team)
 
-      console.log(usedJokers);
-
-      let updatedTeamInfo = [...prev];
+      const updatedTeamInfo = [...prev]
 
       updatedTeamInfo.map((team, i) => {
         if (usedJokers.includes(i)) {
-          team.numberOfJokers -= 1;
+          team.numberOfJokers -= 1
         }
-        return team;
-      });
+        return team
+      })
 
-      return updatedTeamInfo;
-    });
+      return updatedTeamInfo
+    })
 
     setTeams((prev) => {
-      let updatedTeams = [...prev];
+      const updatedTeams = [...prev]
 
       // Extraigo la respuesta correcta y hago una shallow copy
-      let correctAnswer = Object.assign(
+      const correctAnswer = Object.assign(
         {},
         updatedTeams[gameInfo.currentTeam].find((e) => e.isCorrect)
-      );
+      )
 
-      let correctTeam = correctAnswer.team;
+      const correctTeam = correctAnswer.team
 
-      delete correctAnswer.team;
-      delete correctAnswer.isCorrect;
+      delete correctAnswer.team
+      delete correctAnswer.isCorrect
 
       // Filtro el tuneline del equipo que está jugando para eliminar las respuestas incorrectas
       // y la correcta en el caso de que sea de otro equipo
@@ -225,189 +224,189 @@ export default function Board() {
         return (
           (e.isCorrect && e.team === gameInfo.currentTeam) ||
           e.isCorrect === undefined
-        );
-      });
+        )
+      })
 
       if (correctTeam === gameInfo.currentTeam) {
         updatedTeams[gameInfo.currentTeam].forEach(function (e) {
-          delete e.team;
-          delete e.isCorrect;
-        });
+          delete e.team
+          delete e.isCorrect
+        })
       }
 
       // Si no es el turno del equipo que ha acertado es porque la ha robado
       // con el rebote, y por lo tanto se la pongo en su tuneline
-      if (correctTeam != gameInfo.currentTeam && correctTeam != 0) {
-        updatedTeams[correctTeam].push(correctAnswer);
+      if (correctTeam !== gameInfo.currentTeam && correctTeam !== 0) {
+        updatedTeams[correctTeam].push(correctAnswer)
 
         updatedTeams[correctTeam] = updatedTeams[correctTeam].sort(
           (a, b) => a.release_date - b.release_date
-        );
+        )
 
         updatedTeams[correctTeam].forEach(function (e) {
-          delete e.team;
-          delete e.isCorrect;
-        });
+          delete e.team
+          delete e.isCorrect
+        })
       }
-      return updatedTeams;
-    });
+      return updatedTeams
+    })
 
     // Checkeo si ha ganado alguien
     if (teams[gameInfo.currentTeam].length > 9) {
       setGameInfo((gameInfo) => ({
         ...gameInfo,
-        winner: gameInfo.currentTeam,
-      }));
+        winner: gameInfo.currentTeam
+      }))
     }
 
     // Oculto el botón de Siguiente equipo
-    setShowNextTeamButton(false);
+    setShowNextTeamButton(false)
 
     // Cambio el modo rebote
-    setStealTry(false);
+    setStealTry(false)
 
     // Establezco una nueva canción de forma aleatoria
-    setRandomSong();
+    setRandomSong()
 
     // Si estaba sonando la música, la pauso
-    if (!is_paused) {
-      togglePlay();
+    if (!isPaused) {
+      togglePlay()
     }
 
     // // Paso al siguiente equipo
     setGameInfo((prev) => {
-      var updatedGameInfo = {};
+      let updatedGameInfo = {}
       updatedGameInfo = {
         currentTeam:
           gameInfo.currentTeam >= gameInfo.numberOfTeams
             ? 1
-            : gameInfo.currentTeam + 1,
-      };
-      return { ...prev, ...updatedGameInfo };
-    });
+            : gameInfo.currentTeam + 1
+      }
+      return { ...prev, ...updatedGameInfo }
+    })
   }
 
-  function handleStealTry() {
-    setshowSolveButton(true);
-    setStealTry((prev) => !prev);
+  function handleStealTry () {
+    setshowSolveButton(true)
+    setStealTry((prev) => !prev)
     setTeams((prev) => {
-      let updatedTeams = [...prev];
-      let currentTrack = {};
+      const updatedTeams = [...prev]
+      let currentTrack = {}
 
       for (let i = 1; i <= gameInfo.numberOfTeams; i++) {
-        currentTrack = gameInfo.currentTrack;
+        currentTrack = gameInfo.currentTrack
 
         if (i !== gameInfo.currentTeam && teamInfo[i].numberOfJokers > 0) {
-          currentTrack.team = i;
+          currentTrack.team = i
           updatedTeams[0].push({
             ...currentTrack,
             uri: currentTrack.uri + '_' + i,
             team: i,
-            color: teamInfo[i].color,
-          });
+            color: teamInfo[i].color
+          })
         }
       }
-      return updatedTeams;
-    });
+      return updatedTeams
+    })
 
     // Cierro el showStealPopup que pregunta si se va a usar la ficha Tuneline
-    setShowSteal(false);
+    setShowSteal(false)
   }
 
-  function handleNoStealTry() {
+  function handleNoStealTry () {
     // Cierro el showStealPopup que pregunta si se va a usar la ficha Tuneline
-    setShowSteal(false);
-    setshowSolveButton(true);
-    handleSolve();
+    setShowSteal(false)
+    setshowSolveButton(true)
+    handleSolve()
   }
 
-  function handleSolve() {
+  function handleSolve () {
     setTeams((prev) => {
-      const updatedTeams = [...prev];
+      const updatedTeams = [...prev]
       updatedTeams[gameInfo.currentTeam].map((e, i, array) => {
-        if (e.hasOwnProperty('team')) {
-          let prev = +array[i - 1]?.release_date;
-          let curr = +e.release_date;
-          let next = +array[i + 1]?.release_date;
-          prev = isNaN(prev) ? 0 : prev;
-          next = isNaN(next) ? 9999 : next;
-          e.isCorrect = prev <= curr && curr < next;
+        if (Object.prototype.hasOwnProperty.call(e, 'team')) {
+          let prev = +array[i - 1]?.release_date
+          const curr = +e.release_date
+          let next = +array[i + 1]?.release_date
+          prev = isNaN(prev) ? 0 : prev
+          next = isNaN(next) ? 9999 : next
+          e.isCorrect = prev <= curr && curr < next
           if (e.isCorrect) {
-            e.isHidden = false;
+            e.isHidden = false
           }
-          return e;
+          return e
         }
-      });
+      })
 
       const correctAnswerExists =
         updatedTeams[gameInfo.currentTeam].filter(
-          (e) => e.hasOwnProperty('team') && e.isCorrect
-        ).length > 0;
+          (e) => Object.prototype.hasOwnProperty.call(e, 'team') && e.isCorrect
+        ).length > 0
 
       if (!correctAnswerExists) {
         setTeams((prev) => {
-          let updatedTeams = [...prev];
+          const updatedTeams = [...prev]
 
-          const currentTrackYear = +gameInfo.currentTrack.release_date;
-          let correctIndex = updatedTeams[gameInfo.currentTeam].findLastIndex(
+          const currentTrackYear = +gameInfo.currentTrack.release_date
+          const correctIndex = updatedTeams[gameInfo.currentTeam].findLastIndex(
             (e) => e.team === undefined && +e.release_date <= currentTrackYear
-          );
+          )
 
           updatedTeams[gameInfo.currentTeam].splice(correctIndex + 1, 0, {
             ...gameInfo.currentTrack,
             isCorrect: true,
             isHidden: false,
-            team: 0,
-          });
-        });
+            team: 0
+          })
+        })
       }
 
-      return updatedTeams;
-    });
+      return updatedTeams
+    })
 
-    setShowNextTeamButton(true);
-    setshowSolveButton(false);
+    setShowNextTeamButton(true)
+    setshowSolveButton(false)
   }
 
-  function findContainer(id) {
+  function findContainer (id) {
     if (id in teams) {
-      return id;
+      return id
     }
-    let res;
-    for (var key in teams) {
+    let res
+    for (const key in teams) {
       teams[key].map((e) => {
         if (e.uri === id) {
-          res = key;
+          res = key
         }
-      });
+      })
     }
-    return res;
+    return res
   }
 
-  function handleDragStart(event) {
-    const { active } = event;
-    const { id } = active;
-    setActiveId(id);
+  function handleDragStart (event) {
+    const { active } = event
+    const { id } = active
+    setActiveId(id)
   }
 
-  function handleDragOver(event) {
-    const { active, over } = event;
-    const { id } = active;
+  function handleDragOver (event) {
+    const { active, over } = event
+    const { id } = active
 
     if (over === null) {
-      return;
+      return
     }
-    const { id: overId } = over;
+    const { id: overId } = over
 
     // Find the containers
-    const activeContainer = findContainer(id);
-    const overContainer = findContainer(overId);
+    const activeContainer = findContainer(id)
+    const overContainer = findContainer(overId)
 
     if (
       (activeContainer === 1 && overContainer === 0) ||
       (activeContainer === 1 && overContainer === 1)
     ) {
-      return;
+      return
     }
 
     if (
@@ -415,71 +414,71 @@ export default function Board() {
       !overContainer ||
       activeContainer === overContainer
     ) {
-      return;
+      return
     }
 
     setTeams((prev) => {
-      const activeItems = prev[activeContainer];
-      const overItems = prev[overContainer];
+      const activeItems = prev[activeContainer]
+      const overItems = prev[overContainer]
 
       // Find the indexes for the items
       const activeIndex = activeItems
         .map(function (e) {
-          return e.uri;
+          return e.uri
         })
-        .indexOf(id);
+        .indexOf(id)
 
       const overIndex = overItems
         .map(function (e) {
-          return e.uri;
+          return e.uri
         })
-        .indexOf(overId);
+        .indexOf(overId)
 
-      let newIndex;
+      let newIndex
       if (overId in prev) {
         // We're at the root droppable of a container
-        newIndex = overItems.length + 1;
+        newIndex = overItems.length + 1
       } else {
         const isBelowLastItem =
           over &&
           active.rect.current.translated &&
-          active.rect.current.translated.top > over.rect.top + over.rect.height;
+          active.rect.current.translated.top > over.rect.top + over.rect.height
 
-        const modifier = isBelowLastItem ? 1 : 0;
-        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+        const modifier = isBelowLastItem ? 1 : 0
+        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1
       }
 
-      const updatedTeams = [...prev];
+      const updatedTeams = [...prev]
       updatedTeams[activeContainer] = [
-        ...prev[activeContainer].filter((item) => item.uri !== active.id),
-      ];
+        ...prev[activeContainer].filter((item) => item.uri !== active.id)
+      ]
       updatedTeams[overContainer] = [
         ...prev[overContainer].slice(0, newIndex),
         teams[activeContainer][activeIndex],
-        ...prev[overContainer].slice(newIndex, prev[overContainer].length),
-      ];
+        ...prev[overContainer].slice(newIndex, prev[overContainer].length)
+      ]
 
-      return updatedTeams;
-    });
+      return updatedTeams
+    })
   }
 
-  function handleDragEnd(event) {
-    const { active, over } = event;
-    const { id } = active;
+  function handleDragEnd (event) {
+    const { active, over } = event
+    const { id } = active
 
     if (over === null) {
-      return;
+      return
     }
-    const { id: overId } = over;
+    const { id: overId } = over
 
-    const activeContainer = findContainer(id);
-    const overContainer = findContainer(overId);
+    const activeContainer = findContainer(id)
+    const overContainer = findContainer(overId)
 
     if (
       (activeContainer === 1 && overContainer === 0) ||
       (activeContainer === 1 && overContainer === 1)
     ) {
-      return;
+      return
     }
 
     if (
@@ -487,66 +486,66 @@ export default function Board() {
       !overContainer ||
       activeContainer !== overContainer
     ) {
-      return;
+      return
     }
 
     // Find the indexes for the items
     const activeIndex = teams[activeContainer]
       .map(function (e) {
-        return e.uri;
+        return e.uri
       })
-      .indexOf(id);
+      .indexOf(id)
 
     const overIndex = teams[overContainer]
       .map(function (e) {
-        return e.uri;
+        return e.uri
       })
-      .indexOf(overId);
+      .indexOf(overId)
 
     if (activeIndex !== overIndex) {
       if (overContainer === '0') {
-        return;
+        return
       }
 
       // Altero el orden de los items
       setTeams((prev) => {
-        const updatedTeams = [...prev];
+        const updatedTeams = [...prev]
         updatedTeams[activeContainer] = arrayMove(
           teams[overContainer],
           activeIndex,
           overIndex
-        );
-        return updatedTeams;
-      });
+        )
+        return updatedTeams
+      })
 
       // Si ningún equipo tiene comodines muestro el boton
       // para resolver la jugada
-      const numberOfJokers = teamInfo.map((team) => team.numberOfJokers);
+      const numberOfJokers = teamInfo.map((team) => team.numberOfJokers)
       if (Math.max(...numberOfJokers) === 0) {
-        setshowSolveButton(true);
+        setshowSolveButton(true)
       }
 
       // Si no es un rebote y algún equipo tiene jokers
       // preguntar si algún equipo quiere robar
       if (!stealTry && Math.max(...numberOfJokers) > 0) {
-        setShowSteal(true);
+        setShowSteal(true)
       }
     } else {
       if (overContainer === '0') {
-        return;
+        return
       }
       // Si ningún equipo tiene comodines muestro el boton
       // para resolver la jugada
-      const numberOfJokers = teamInfo.map((team) => team.numberOfJokers);
+      const numberOfJokers = teamInfo.map((team) => team.numberOfJokers)
       if (Math.max(...numberOfJokers) === 0) {
-        setshowSolveButton(true);
+        setshowSolveButton(true)
       }
       // Si no es un rebote y algún equipo tiene jokers
       // preguntar si algún equipo quiere robar
       if (!stealTry && Math.max(...numberOfJokers) > 0) {
-        setShowSteal(true);
+        setShowSteal(true)
       }
     }
-    setActiveId(null);
+    setActiveId(null)
   }
 }
