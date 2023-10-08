@@ -62,6 +62,8 @@ function SpotifyTransfer (props) {
     }
   }, [])
 
+  console.log(isReady)
+  console.log(isActive)
   if (!isActive && isReady) {
     transferDevice()
 

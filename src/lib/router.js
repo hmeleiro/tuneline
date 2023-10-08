@@ -88,7 +88,8 @@ router.get('/auth/callback', async (req, res) => {
 
     // const params = new URLSearchParams(response.data).toString()
     console.log('Redirecting user to index...', Date())
-    res.cookie('access_token', response.access_token, { maxAge: 1000 * response.expires_in, httpOnly: false })
+    res.cookie('access_token', response.access_token)
+    // res.cookie('access_token', response.access_token, { maxAge: 1000 * response.expires_in, httpOnly: false })
     res.cookie('refresh_token', response.refresh_token)
 
     res.redirect('/?' + new URLSearchParams(params).toString())

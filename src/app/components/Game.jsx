@@ -3,18 +3,18 @@ import { GameContext } from '../context/GameContext'
 import { AuthContext } from '../context/AuthContext'
 import { WebPlayerContext } from '../context/WebPlayerContext'
 import songLibrary from '../assets/songs.json'
-
 import SpotifyPlayer from './SpotifyPlayer'
 import Board from './Board'
 import TeamSelection from './TeamSelection'
 import Rules from './Rules'
 import SideBarMenu from './SideBarMenu'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
+import ScoreBoardEndScreen from './ScoreBoardEndScreen'
+import HomePage from './Homepage'
 
 function Game () {
   const { token } =
     useContext(AuthContext)
-
   const {
     gameInfo,
     setGameInfo,
@@ -82,6 +82,7 @@ function Game () {
     window.localStorage.setItem('songs', JSON.stringify(songs))
   }, [songs])
 
+  console.log(isActive)
   if (token !== undefined && !isActive) {
     return (
       <div className='flex flex-col items-center h-screen justify-center'>
@@ -94,16 +95,24 @@ function Game () {
 
   if (gameInfo?.winner != null) {
     return (
-      <div className='flex flex-col items-center h-screen justify-center'>
-        ¡El equipo {teamInfo[gameInfo.winner].name} ha ganado!
-      </div>
+      <>
+        <FullScreen handle={handle} className='h-screen'>
+          <SideBarMenu HandleFullScreen={handle} />
+          <div className='flex flex-col items-center h-screen justify-center'>
+            ¡El equipo {teamInfo[gameInfo.winner].name} ha ganado!
+            <ScoreBoardEndScreen />
+          </div>
+
+        </FullScreen>
+      </>
+
     )
   }
 
   if (token) {
-    // Check para saber si ha caducado el token y refrescarlo
-    // let now = new Date()
-    // now = now[Symbol.toPrimitive]('number')
+  // Check para saber si ha caducado el token y refrescarlo
+  // let now = new Date()
+  // now = now[Symbol.toPrimitive]('number')
 
     // if (now >= expiresAt) {
     //   getRefreshedToken(refreshToken)
@@ -114,7 +123,7 @@ function Game () {
         <FullScreen handle={handle} className='h-screen'>
           <div className='h-screen w-screen' ref={ref}>
             <Rules />
-            <SideBarMenu FullScreenHandle={handle} />
+            <SideBarMenu handleFullScreen={handle} isGameFinished />
             <Board />
           </div>
         </FullScreen>

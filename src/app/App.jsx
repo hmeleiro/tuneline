@@ -28,8 +28,10 @@ function App () {
     // let now = new Date()
     // now = now[Symbol.toPrimitive]('number')
 
+    console.log(loginInfo)
+
     if (!loginInfo?.access_token && !loginInfo.refresh_token) {
-      // console.log('No hay ni access_token ni refresh_token...')
+      console.log('No hay ni access_token ni refresh_token...')
       getToken()
     }
 

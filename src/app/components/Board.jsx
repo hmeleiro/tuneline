@@ -25,6 +25,8 @@ import { Button } from '@chakra-ui/react'
 
 // import { IconContext } from 'react-icons';
 
+const WIN_NUMBER = 10
+
 export default function Board () {
   const [activeId, setActiveId] = useState()
   const {
@@ -252,7 +254,7 @@ export default function Board () {
     })
 
     // Checkeo si ha ganado alguien
-    if (teams[gameInfo.currentTeam].length > 9) {
+    if (teams[gameInfo.currentTeam].length >= WIN_NUMBER) {
       setGameInfo((gameInfo) => ({
         ...gameInfo,
         winner: gameInfo.currentTeam
