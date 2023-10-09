@@ -15,12 +15,18 @@ module.exports = {
         team4: '#14b249',
         team5: '#f58e49',
         correct: '#27da69',
-        incorrect: '#d32529',
+        incorrect: '#d32529'
       },
       fontSize: {
-        '2xs': '0.64rem',
-      },
-    },
+        '2xs': '0.64rem'
+        // sm: '0.7rem',
+        // md: '0.8rem',
+        // lg: '0.9rem',
+        // xl: '1rem',
+        // '2xl': '1.1rem',
+        // '3xl': '1.2rem'
+      }
+    }
   },
-  plugins: [],
-};
+  plugins: []
+}

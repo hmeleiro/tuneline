@@ -17,7 +17,7 @@ function SideBarMenu (props) {
           <IconButton
             aria-label='Exit full screen'
             icon={<Icon as={AiOutlineFullscreenExit} w={5} h={5} color='white' />}
-            colorScheme='teal'
+            colorScheme='blue'
             onClick={handleFullScreen.exit}
             className='mb-3'
           />
@@ -26,7 +26,7 @@ function SideBarMenu (props) {
           <IconButton
             aria-label='Enter full screen'
             icon={<Icon as={AiOutlineFullscreen} w={5} h={5} color='white' />}
-            colorScheme='teal'
+            colorScheme='blue'
             onClick={handleFullScreen.enter}
             className='mb-3'
           />
@@ -37,7 +37,7 @@ function SideBarMenu (props) {
         onClick={handleRestart}
         aria-label='Reset'
         icon={<Icon as={VscDebugRestart} w={5} h={5} color='white' />}
-        colorScheme='teal'
+        colorScheme='blue'
         className='mb-3'
       />
     </div>

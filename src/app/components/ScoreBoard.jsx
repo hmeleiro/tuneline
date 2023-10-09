@@ -43,7 +43,7 @@ function ScoreBoard () {
         <IconButton
           aria-label='Show score'
           icon={<Icon as={MdScoreboard} w={5} h={5} color='white' />}
-          colorScheme='teal'
+          colorScheme='blue'
           className='mb-3'
         />
       </PopoverTrigger>
