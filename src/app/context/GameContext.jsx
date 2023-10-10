@@ -5,6 +5,7 @@ export const GameContext = createContext()
 
 const GameProvider = ({ children }) => {
   const [gameInfo, setGameInfo] = useState()
+  const [boardState, setBoardState] = useState()
   const [teams, setTeams] = useState()
   const [teamInfo, setTeamInfo] = useState()
   const [songs, setSongs] = useState()
@@ -64,11 +65,17 @@ const GameProvider = ({ children }) => {
     window.location.reload()
   }
 
+  // function handleChangeTrack() {
+
+  // }
+
   return (
     <GameContext.Provider
       value={{
         gameInfo,
         setGameInfo,
+        boardState,
+        setBoardState,
         teams,
         setTeams,
         teamInfo,

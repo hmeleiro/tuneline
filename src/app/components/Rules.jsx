@@ -1,3 +1,5 @@
+import { useContext } from 'react'
+
 import {
   Modal,
   ModalOverlay,
@@ -9,15 +11,24 @@ import {
   ModalFooter,
   Button
 } from '@chakra-ui/react'
+import { GameContext } from '../context/GameContext'
 
 function Rules () {
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
-
+  const {
+    setBoardState
+  } = useContext(GameContext)
   return (
     <>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          onClose()
+          setBoardState(prev => ({
+            ...prev,
+            showRules: false
+          }))
+        }}
         closeOnEsc={false}
         closeOnOverlayClick={false}
         isCentered
@@ -49,7 +60,15 @@ function Rules () {
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            <Button
+              colorScheme='blue' mr={3} onClick={() => {
+                onClose()
+                setBoardState(prev => ({
+                  ...prev,
+                  showRules: false
+                }))
+              }}
+            >
               ¡A jugar!
             </Button>
           </ModalFooter>

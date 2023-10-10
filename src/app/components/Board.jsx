@@ -11,19 +11,12 @@ import {
   defaultDropAnimation
 } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-// import { restrictToWindowEdges } from '@dnd-kit/modifiers'
-
 import { GameContext } from '../context/GameContext'
 import { WebPlayerContext } from '../context/WebPlayerContext'
-
-// import SpotifyControls from './SpotifyControls';
 import StealPopup from './StealPopup'
-
 import { TrackCardOverlay } from './TrackCard'
 import Container from './Container'
 import { Button } from '@chakra-ui/react'
-
-// import { IconContext } from 'react-icons';
 
 const WIN_NUMBER = 10
 
@@ -32,6 +25,8 @@ export default function Board () {
   const {
     gameInfo,
     setGameInfo,
+    boardState,
+    setBoardState,
     teamInfo,
     setTeamInfo,
     teams,
@@ -40,37 +35,15 @@ export default function Board () {
     scollToRef
   } = useContext(GameContext)
 
-  const gameState = JSON.parse(window.localStorage.getItem('gameState'))
-
   const { isPaused, togglePlay } = useContext(WebPlayerContext)
-  const [showStealPopup, setShowSteal] = useState(
-    gameState ? gameState.showStealPopup : false
-  )
-  const [stealTry, setStealTry] = useState(
-    gameState ? gameState.stealTry : false
-  )
-  const [showNextTeamButton, setShowNextTeamButton] = useState(
-    gameState ? gameState.showNextTeamButton : false
-  )
-  const [showSolveButton, setshowSolveButton] = useState(
-    gameState ? gameState.showSolveButton : false
-  )
-  const [rulesAlreadyShown, setRulesAlreadyShown] = useState(false)
 
   const dropAnimation = {
     ...defaultDropAnimation
   }
 
   useEffect(() => {
-    const gameState = {
-      showStealPopup,
-      stealTry,
-      showNextTeamButton,
-      showSolveButton
-    }
-
-    window.localStorage.setItem('gameState', JSON.stringify(gameState))
-  }, [showStealPopup, stealTry, showNextTeamButton, showSolveButton])
+    window.localStorage.setItem('boardState', JSON.stringify(boardState))
+  }, [boardState])
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -110,7 +83,7 @@ export default function Board () {
           </p>
         </div>
 
-        {showNextTeamButton
+        {boardState.showNextTeamButton
           ? (
             <div className='h-[10vh]'>
               <Button
@@ -126,7 +99,7 @@ export default function Board () {
             <div className='h-[10vh]' />
             )}
 
-        {showSolveButton
+        {boardState.showSolveButton
           ? (
             <div className='h-[10vh]'>
               <Button
@@ -145,7 +118,7 @@ export default function Board () {
 
       <div className='flex-1 w-full h-[80vh] items-center justify-center'>
         <StealPopup
-          isOpen={showStealPopup}
+          isOpen={boardState.showStealPopup}
           handleStealTry={handleStealTry}
           handleNoStealTry={handleNoStealTry}
         />
@@ -262,10 +235,16 @@ export default function Board () {
     }
 
     // Oculto el botón de Siguiente equipo
-    setShowNextTeamButton(false)
+    setBoardState(prev => ({
+      ...prev,
+      showNextTeamButton: false
+    }))
 
     // Cambio el modo rebote
-    setStealTry(false)
+    setBoardState(prev => ({
+      ...prev,
+      stealTry: false
+    }))
 
     // Establezco una nueva canción de forma aleatoria
     setRandomSong()
@@ -289,8 +268,14 @@ export default function Board () {
   }
 
   function handleStealTry () {
-    setshowSolveButton(true)
-    setStealTry((prev) => !prev)
+    setBoardState(prev => ({
+      ...prev,
+      showSolveButton: true
+    }))
+    setBoardState(prev => ({
+      ...prev,
+      stealTry: !prev.stealTry
+    }))
     setTeams((prev) => {
       const updatedTeams = [...prev]
       let currentTrack = {}
@@ -312,20 +297,28 @@ export default function Board () {
     })
 
     // Cierro el showStealPopup que pregunta si se va a usar la ficha Tuneline
-    setShowSteal(false)
+    setBoardState(prev => ({
+      ...prev,
+      showStealPopup: false
+    }))
   }
 
   function handleNoStealTry () {
     // Cierro el showStealPopup que pregunta si se va a usar la ficha Tuneline
-    setShowSteal(false)
-    setshowSolveButton(true)
-    handleSolve()
+    setBoardState(prev => ({
+      ...prev,
+      showStealPopup: false
+    }))
+    setBoardState(prev => ({
+      ...prev,
+      showSolveButton: true
+    }))
   }
 
   function handleSolve () {
     setTeams((prev) => {
       const updatedTeams = [...prev]
-      updatedTeams[gameInfo.currentTeam].map((e, i, array) => {
+      updatedTeams[gameInfo.currentTeam].forEach((e, i, array) => {
         if (Object.prototype.hasOwnProperty.call(e, 'team')) {
           let prev = +array[i - 1]?.release_date
           const curr = +e.release_date
@@ -366,8 +359,14 @@ export default function Board () {
       return updatedTeams
     })
 
-    setShowNextTeamButton(true)
-    setshowSolveButton(false)
+    setBoardState(prev => ({
+      ...prev,
+      showNextTeamButton: true
+    }))
+    setBoardState(prev => ({
+      ...prev,
+      showSolveButton: false
+    }))
   }
 
   function findContainer (id) {
@@ -376,7 +375,7 @@ export default function Board () {
     }
     let res
     for (const key in teams) {
-      teams[key].map((e) => {
+      teams[key].forEach((e) => {
         if (e.uri === id) {
           res = key
         }
@@ -524,13 +523,19 @@ export default function Board () {
       // para resolver la jugada
       const numberOfJokers = teamInfo.map((team) => team.numberOfJokers)
       if (Math.max(...numberOfJokers) === 0) {
-        setshowSolveButton(true)
+        setBoardState(prev => ({
+          ...prev,
+          showSolveButton: true
+        }))
       }
 
       // Si no es un rebote y algún equipo tiene jokers
       // preguntar si algún equipo quiere robar
-      if (!stealTry && Math.max(...numberOfJokers) > 0) {
-        setShowSteal(true)
+      if (!boardState.stealTry && Math.max(...numberOfJokers) > 0) {
+        setBoardState(prev => ({
+          ...prev,
+          showStealPopup: true
+        }))
       }
     } else {
       if (overContainer === '0') {
@@ -540,12 +545,18 @@ export default function Board () {
       // para resolver la jugada
       const numberOfJokers = teamInfo.map((team) => team.numberOfJokers)
       if (Math.max(...numberOfJokers) === 0) {
-        setshowSolveButton(true)
+        setBoardState(prev => ({
+          ...prev,
+          showSolveButton: true
+        }))
       }
       // Si no es un rebote y algún equipo tiene jokers
       // preguntar si algún equipo quiere robar
-      if (!stealTry && Math.max(...numberOfJokers) > 0) {
-        setShowSteal(true)
+      if (!boardState.stealTry && Math.max(...numberOfJokers) > 0) {
+        setBoardState(prev => ({
+          ...prev,
+          showStealPopup: true
+        }))
       }
     }
     setActiveId(null)

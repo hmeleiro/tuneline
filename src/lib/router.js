@@ -86,10 +86,8 @@ router.get('/auth/callback', async (req, res) => {
       ...userData
     }
 
-    // const params = new URLSearchParams(response.data).toString()
     console.log('Redirecting user to index...', Date())
-    res.cookie('access_token', response.access_token)
-    // res.cookie('access_token', response.access_token, { maxAge: 1000 * response.expires_in, httpOnly: false })
+    res.cookie('access_token', response.access_token, { maxAge: 1000 * response.expires_in, httpOnly: false })
     res.cookie('refresh_token', response.refresh_token)
 
     res.redirect('/?' + new URLSearchParams(params).toString())
@@ -99,9 +97,8 @@ router.get('/auth/callback', async (req, res) => {
 })
 
 router.get('/auth/refresh_token', async (req, res) => {
-  const refresh_token = req.query.refresh_token
+  const refreshToken = req.query.refresh_token
   console.log('Refreshing token...', Date())
-
   try {
     const response = await axios({
       method: 'post',
@@ -115,11 +112,12 @@ router.get('/auth/refresh_token', async (req, res) => {
         'content-type': 'application/x-www-form-urlencoded'
       },
       data: {
-        refresh_token,
+        refresh_token: refreshToken,
         grant_type: 'refresh_token'
       }
     })
 
+    res.cookie('access_token', response.data.access_token, { maxAge: 1000 * response.data.expires_in, httpOnly: false })
     res.send(response.data)
   } catch (err) {
     res.status(500).json({ message: err })

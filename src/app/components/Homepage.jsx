@@ -5,9 +5,9 @@ import { Navigate } from 'react-router-dom'
 import { Heading, Text } from '@chakra-ui/react'
 
 function HomePage () {
-  const { token } = useContext(AuthContext)
+  const { token, refreshToken } = useContext(AuthContext)
 
-  if (!token) {
+  if (!token || !refreshToken) {
     return (
       <div className='flex flex-col items-center h-screen justify-center'>
         <Heading size='3xl' className='mb-2 ml-9 mr-9'>

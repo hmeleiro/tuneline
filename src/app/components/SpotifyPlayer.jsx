@@ -1,11 +1,15 @@
 import React, { useEffect, useContext } from 'react'
 import { WebPlayerContext } from '../context/WebPlayerContext'
+import { AuthContext } from '../context/AuthContext'
 import { Text } from '@chakra-ui/react'
 
 function SpotifyTransfer (props) {
   const { token } = props
+
   const { setPaused, isActive, setActive, isReady, setIsReady, setPlayer } =
     useContext(WebPlayerContext)
+  const { refreshToken, getRefreshedToken } =
+    useContext(AuthContext)
 
   useEffect(() => {
     const script = document.createElement('script')
@@ -41,6 +45,10 @@ function SpotifyTransfer (props) {
 
       player.addListener('authentication_error', ({ message }) => {
         console.error(message)
+        if (refreshToken) {
+          console.log('Refrescando token')
+          getRefreshedToken(refreshToken)
+        }
       })
 
       player.addListener('account_error', ({ message }) => {
@@ -62,8 +70,6 @@ function SpotifyTransfer (props) {
     }
   }, [])
 
-  console.log(isReady)
-  console.log(isActive)
   if (!isActive && isReady) {
     transferDevice()
 

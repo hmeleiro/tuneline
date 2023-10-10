@@ -8,7 +8,7 @@ const WebPlayerProvider = ({ children }) => {
   const [isActive, setActive] = useState(false)
   const [isReady, setIsReady] = useState(false)
   const [player, setPlayer] = useState(undefined)
-  const { token } = useContext(AuthContext)
+  const { token, refreshToken, getRefreshedToken } = useContext(AuthContext)
 
   function togglePlay (track) {
     // Si no hay track simplemente alterna play/pause
@@ -30,6 +30,9 @@ const WebPlayerProvider = ({ children }) => {
 
       // Si no es la misma pinchamos la que está en juego...
       if (currentTrack.uri !== track.uri) {
+        console.log(track)
+        console.log(currentTrack)
+        console.log('Holaaaa')
         fetch('https://api.spotify.com/v1/me/player/play', {
           method: 'PUT',
           headers: {
@@ -40,10 +43,17 @@ const WebPlayerProvider = ({ children }) => {
           })
         }).then(() => {
           setPaused((prev) => !prev)
+        }).catch((err) => {
+          // if (refreshToken) {
+          //   getRefreshedToken(refreshToken)
+          // }
+          console.log(err)
         })
 
         // Si es la misma simplemente alternamos play/pause
       } else {
+        console.log(track)
+        console.log(currentTrack)
         player.togglePlay().then(() => {
           setPaused((prev) => !prev)
         })

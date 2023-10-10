@@ -16,7 +16,7 @@ function StealPopup (props) {
   const { ref } = useContext(GameContext)
   return (
     <Portal containerRef={ref}>
-      <Modal isOpen={isOpen}>
+      <Modal isOpen={isOpen} isCentered motionPreset='scale'>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>¿Algún equipo quiere robar la canción?</ModalHeader>

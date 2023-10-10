@@ -70,13 +70,12 @@ function TeamSelection () {
   return (
     <div className='flex flex-col h-screen justify-center items-center'>
       <Text
-        maxWidth={400}
+        maxWidth={200}
         align='center'
-        fontSize='md'
-        className='mb-2 ml-9 mr-9'
+        fontSize='lg'
+        className='ml-9 mr-9'
       >
-        Selecciona el número de equipos que van a jugar y se os asignará a cada
-        uno un nombre aleatorio.
+        Selecciona el número de equipos que van a jugar.
       </Text>
       <form method='post' onSubmit={submitHandler}>
         <div className='form-control'>
