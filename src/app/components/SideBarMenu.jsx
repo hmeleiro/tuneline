@@ -5,7 +5,7 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai'
 import SpotifyControls from './SpotifyControls'
 import { GameContext } from '../context/GameContext'
 import RestartButton from './RestartButton'
-// import ChangeTrack from './ChangeTrack'
+import ChangeTrackButton from './ChangeTrackButton'
 
 function SideBarMenu (props) {
   const { handleFullScreen, isGameFinished } = props
@@ -32,10 +32,11 @@ function SideBarMenu (props) {
             className='mb-3'
           />
           )}
-      {isGameFinished ? <SpotifyControls track={teams[0][0]} /> : null}
+      {/* {isGameFinished ? <SpotifyControls track={teams[0][0]} /> : null} */}
+      {isGameFinished ? <SpotifyControls /> : null}
       {isGameFinished ? <ScoreBoard /> : null}
       <RestartButton />
-      {/* <ChangeTrack /> */}
+      <ChangeTrackButton />
     </div>
   )
 }

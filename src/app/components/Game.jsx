@@ -132,7 +132,6 @@ function Game () {
 
   // Si hay un token pero el reproductor todavía no está activo, renderiza el reproductor
   if (token !== undefined && !isActive) {
-    console.log(token)
     return (
       <div className='flex flex-col items-center h-screen justify-center'>
         <SpotifyPlayer token={token} />

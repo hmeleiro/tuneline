@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { GameContext } from '../context/GameContext'
+import { WebPlayerContext } from '../context/WebPlayerContext'
 import { Button, Text } from '@chakra-ui/react'
 import bandNames from '../assets/band-names.json'
 
@@ -8,6 +9,7 @@ import './form.css'
 function TeamSelection () {
   const { setGameInfo, setTeams, setTeamInfo, songs, getRandomSong } =
     useContext(GameContext)
+  const { setTrackinSpotifyPlayer } = useContext(WebPlayerContext)
 
   const colorPalette = [
     '#264653',
@@ -34,6 +36,7 @@ function TeamSelection () {
     // Establezco la primera canción oculta (elemento 1 del array Teams)
     const currentTrack = getRandomSong(songs)
     updatedTeams[0] = [{ ...currentTrack, team: 1 }]
+    setTrackinSpotifyPlayer(currentTrack.uri)
 
     // Establezco las canciones iniciales para cada uno de los equipos
     for (let i = 0; i < formJson.numberOfTeams; i++) {

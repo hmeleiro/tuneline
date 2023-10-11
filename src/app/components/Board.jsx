@@ -45,6 +45,13 @@ export default function Board () {
     window.localStorage.setItem('boardState', JSON.stringify(boardState))
   }, [boardState])
 
+  useEffect(() => {
+    if (scollToRef.current != null) {
+      scollToRef.current.scrollIntoView(true)
+    }
+  }, [scollToRef])
+
+  const teamColor = 'text-team' + gameInfo.currentTeam
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -62,20 +69,12 @@ export default function Board () {
       }
     })
   )
-
-  useEffect(() => {
-    if (scollToRef.current != null) {
-      scollToRef.current.scrollIntoView(true)
-    }
-  }, [scollToRef])
-
-  const teamColor = 'text-team' + gameInfo.currentTeam
   return (
     <div className='flex flex-col justify-center h-screen w-screen'>
       {/* BOTONES DE PASAR EQUIPO Y RESOLVER */}
       <div className='flex flex-col items-center justify-center h-[10vh] mt-8'>
         <div className='flex items-center'>
-          <p className='text-md font-bold'>
+          <p className='text-lg font-bold'>
             Es el turno de{' '}
             <span className={`${teamColor}`}>
               {teamInfo[gameInfo.currentTeam].name}
@@ -83,6 +82,7 @@ export default function Board () {
           </p>
         </div>
 
+        {/* Botón de siguiente equipo */}
         {boardState.showNextTeamButton
           ? (
             <div className='h-[10vh]'>
@@ -99,6 +99,7 @@ export default function Board () {
             <div className='h-[10vh]' />
             )}
 
+        {/* Botón de resolver ronda */}
         {boardState.showSolveButton
           ? (
             <div className='h-[10vh]'>
@@ -116,6 +117,7 @@ export default function Board () {
             )}
       </div>
 
+      {/* DRAG AND DROP TIMELINE */}
       <div className='flex-1 w-full h-[80vh] items-center justify-center'>
         <StealPopup
           isOpen={boardState.showStealPopup}
@@ -250,6 +252,7 @@ export default function Board () {
     setRandomSong()
 
     // Si estaba sonando la música, la pauso
+    console.log(isPaused)
     if (!isPaused) {
       togglePlay()
     }

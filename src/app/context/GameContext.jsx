@@ -1,5 +1,6 @@
-import React, { createContext, useState, useRef } from 'react'
+import React, { createContext, useState, useRef, useContext } from 'react'
 import songLibrary from '../assets/songs.json'
+import { WebPlayerContext } from '../context/WebPlayerContext'
 
 export const GameContext = createContext()
 
@@ -9,6 +10,8 @@ const GameProvider = ({ children }) => {
   const [teams, setTeams] = useState()
   const [teamInfo, setTeamInfo] = useState()
   const [songs, setSongs] = useState()
+
+  const { setTrackinSpotifyPlayer } = useContext(WebPlayerContext)
 
   const ref = useRef(null)
   const scollToRef = useRef(null)
@@ -23,19 +26,29 @@ const GameProvider = ({ children }) => {
     return song
   }
 
-  function setRandomSong () {
+  function setRandomSong (changeTeam = true) {
     const randomSong = getRandomSong(songs)
+    setTrackinSpotifyPlayer(randomSong.uri)
 
+    // Changing the Teams state
     setTeams((prev) => {
       const updatedTeams = [...prev]
       updatedTeams[0] = [
-        {
-          ...randomSong,
-          team:
-            gameInfo.currentTeam < gameInfo.numberOfTeams
-              ? gameInfo.currentTeam + 1
-              : 1
-        }
+        changeTeam
+          // If changeTeam (usual behaviour) set song in team0 and pass turn to next team
+          ? {
+              ...randomSong,
+              team:
+              gameInfo.currentTeam < gameInfo.numberOfTeams
+                ? gameInfo.currentTeam + 1
+                : 1
+            }
+          // If changeTeam is false (when ChangeTrackButton is pressed) set song in team0 but leave currentTeam
+          : {
+              ...randomSong,
+              team: gameInfo.currentTeam
+            }
+
       ]
       return updatedTeams
     })
@@ -65,8 +78,22 @@ const GameProvider = ({ children }) => {
     window.location.reload()
   }
 
-  // function handleChangeTrack() {
+  function handleChangeTrack () {
+    const randomSong = getRandomSong(songs)
+    setTrackinSpotifyPlayer(randomSong.uri)
+  }
 
+  // const setSpotifyPlaylist = (songs) => {
+  //   const uris = songs.map((song) => (song.uri))
+  //   fetch('https://api.spotify.com/v1/me/player/play', {
+  //     method: 'PUT',
+  //     headers: {
+  //       Authorization: 'Bearer ' + token
+  //     },
+  //     body: JSON.stringify({
+  //       uris
+  //     })
+  //   })
   // }
 
   return (
@@ -86,7 +113,8 @@ const GameProvider = ({ children }) => {
         setRandomSong,
         ref,
         scollToRef,
-        handleRestart
+        handleRestart,
+        handleChangeTrack
       }}
     >
       {children}

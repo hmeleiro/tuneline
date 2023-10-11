@@ -6,8 +6,7 @@ import { IconButton, Icon } from '@chakra-ui/react'
 
 // import { IconContext } from 'react-icons';
 
-function SpotifyControls (props) {
-  const { track } = props
+function SpotifyControls () {
   const { isPaused, togglePlay } = useContext(WebPlayerContext)
   return (
     <div className='mb-3'>
@@ -17,7 +16,7 @@ function SpotifyControls (props) {
             aria-label='Play music'
             icon={<Icon as={FaPlay} w={5} h={5} />}
             colorScheme='blue'
-            onClick={() => togglePlay(track)}
+            onClick={togglePlay}
           />
           )
         : (
@@ -25,7 +24,7 @@ function SpotifyControls (props) {
             aria-label='Pause music'
             icon={<Icon as={ImPause2} w={5} h={5} />}
             colorScheme='blue'
-            onClick={() => togglePlay(track)}
+            onClick={togglePlay}
           />
           )}
     </div>

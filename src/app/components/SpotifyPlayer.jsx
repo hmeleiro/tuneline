@@ -59,11 +59,22 @@ function SpotifyTransfer (props) {
         if (!state) {
           return
         }
-        setPaused(state.paused)
+        console.log('state.paused:', state.paused)
+        // setPaused(state.paused)
 
         player.getCurrentState().then((state) => {
           !state ? setActive(false) : setActive(true)
         })
+      })
+
+      player.addListener('player_state_changed', ({
+        position,
+        duration,
+        track_window: { current_track }
+      }) => {
+        console.log('Currently Playing', current_track)
+        console.log('Position in Song', position)
+        console.log('Duration of Song', duration)
       })
 
       player.connect()
