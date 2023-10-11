@@ -1,6 +1,5 @@
-import React, { createContext, useState, useRef, useContext } from 'react'
-import songLibrary from '../assets/songs.json'
-import { WebPlayerContext } from '../context/WebPlayerContext'
+import React, { createContext, useState, useRef } from 'react'
+import songLibrary from '../assets/tuneline-songs.json'
 
 export const GameContext = createContext()
 
@@ -9,54 +8,21 @@ const GameProvider = ({ children }) => {
   const [boardState, setBoardState] = useState()
   const [teams, setTeams] = useState()
   const [teamInfo, setTeamInfo] = useState()
-  const [songs, setSongs] = useState()
-
-  const { setTrackinSpotifyPlayer } = useContext(WebPlayerContext)
+  let selectedSongLibrary = songLibrary.sort(() => 0.5 - Math.random())
+  selectedSongLibrary = selectedSongLibrary.slice(0, 500)
+  const [songs, setSongs] = useState(selectedSongLibrary)
 
   const ref = useRef(null)
   const scollToRef = useRef(null)
 
-  function getRandomSong (songs, isHidden = true) {
-    const randomIndex = Math.floor(Math.random() * songs.length)
-    const song = songs[randomIndex]
-    const newSongLibrary = [...songs]
-    newSongLibrary.splice(randomIndex, 1)
-    setSongs(newSongLibrary)
-    song.isHidden = isHidden
-    return song
-  }
-
-  function setRandomSong (changeTeam = true) {
-    const randomSong = getRandomSong(songs)
-    setTrackinSpotifyPlayer(randomSong.uri)
-
-    // Changing the Teams state
-    setTeams((prev) => {
-      const updatedTeams = [...prev]
-      updatedTeams[0] = [
-        changeTeam
-          // If changeTeam (usual behaviour) set song in team0 and pass turn to next team
-          ? {
-              ...randomSong,
-              team:
-              gameInfo.currentTeam < gameInfo.numberOfTeams
-                ? gameInfo.currentTeam + 1
-                : 1
-            }
-          // If changeTeam is false (when ChangeTrackButton is pressed) set song in team0 but leave currentTeam
-          : {
-              ...randomSong,
-              team: gameInfo.currentTeam
-            }
-
-      ]
-      return updatedTeams
-    })
-
-    setGameInfo((prev) => ({
-      ...prev,
-      currentTrack: randomSong
-    }))
+  function getRandomSong (isHidden = true) {
+    const songsLibrary = [...songs]
+    const initSongIndex = Math.floor(Math.random() * songsLibrary.length)
+    const randomSong = songsLibrary.splice(initSongIndex, 1)[0]
+    randomSong.isHidden = isHidden
+    songsLibrary.splice(initSongIndex, 1)
+    setSongs(songsLibrary)
+    return randomSong
   }
 
   function handleRestart () {
@@ -78,24 +44,6 @@ const GameProvider = ({ children }) => {
     window.location.reload()
   }
 
-  function handleChangeTrack () {
-    const randomSong = getRandomSong(songs)
-    setTrackinSpotifyPlayer(randomSong.uri)
-  }
-
-  // const setSpotifyPlaylist = (songs) => {
-  //   const uris = songs.map((song) => (song.uri))
-  //   fetch('https://api.spotify.com/v1/me/player/play', {
-  //     method: 'PUT',
-  //     headers: {
-  //       Authorization: 'Bearer ' + token
-  //     },
-  //     body: JSON.stringify({
-  //       uris
-  //     })
-  //   })
-  // }
-
   return (
     <GameContext.Provider
       value={{
@@ -110,11 +58,9 @@ const GameProvider = ({ children }) => {
         songs,
         setSongs,
         getRandomSong,
-        setRandomSong,
         ref,
         scollToRef,
-        handleRestart,
-        handleChangeTrack
+        handleRestart
       }}
     >
       {children}

@@ -18,7 +18,7 @@ module.exports = {
         incorrect: '#d32529'
       },
       fontSize: {
-        '2xs': '0.64rem'
+        '2xs': '0.6rem'
         // sm: '0.7rem',
         // md: '0.8rem',
         // lg: '0.9rem',

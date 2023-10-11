@@ -3,10 +3,16 @@ import {
   IconButton, Icon
 } from '@chakra-ui/react'
 import { PiMusicNotesFill } from 'react-icons/pi'
+import { WebPlayerContext } from '../context/WebPlayerContext'
 import { GameContext } from '../context/GameContext'
 
 function ChangeTrackButton () {
-  const { handleChangeTrack } = useContext(GameContext)
+  const { handleChangeTrack } = useContext(WebPlayerContext)
+  const { teamInfo, gameInfo } = useContext(GameContext)
+
+  if (teamInfo[gameInfo.currentTeam].numberOfJokers <= 0) {
+    return
+  }
 
   return (
     <IconButton

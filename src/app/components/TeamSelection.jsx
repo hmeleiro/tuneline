@@ -1,15 +1,13 @@
 import React, { useContext } from 'react'
 import { GameContext } from '../context/GameContext'
-import { WebPlayerContext } from '../context/WebPlayerContext'
 import { Button, Text } from '@chakra-ui/react'
 import bandNames from '../assets/band-names.json'
 
 import './form.css'
 
 function TeamSelection () {
-  const { setGameInfo, setTeams, setTeamInfo, songs, getRandomSong } =
+  const { setGameInfo, setTeams, setTeamInfo, songs, setSongs } =
     useContext(GameContext)
-  const { setTrackinSpotifyPlayer } = useContext(WebPlayerContext)
 
   const colorPalette = [
     '#264653',
@@ -33,18 +31,26 @@ function TeamSelection () {
     const updatedTeams = []
     const updatedTeamInfo = [{ color: null, numberOfJokers: null }]
 
-    // Establezco la primera canción oculta (elemento 1 del array Teams)
-    const currentTrack = getRandomSong(songs)
+    // Establezco la primera canción oculta (elemento 0 del array Teams)
+    // const currentTrack = getRandomSong(songs)
+    const songsLibrary = [...songs]
+    const initSongIndex = Math.floor(Math.random() * songsLibrary.length)
+    const currentTrack = songsLibrary.splice(initSongIndex, 1)[0]
+    currentTrack.isHidden = true
     updatedTeams[0] = [{ ...currentTrack, team: 1 }]
-    setTrackinSpotifyPlayer(currentTrack.uri)
+    // setTrackinSpotifyPlayer(currentTrack.uri)
 
     // Establezco las canciones iniciales para cada uno de los equipos
     for (let i = 0; i < formJson.numberOfTeams; i++) {
-      updatedTeams[i + 1] = [getRandomSong(songs, false)].sort(
+      const initSongIndex = Math.floor(Math.random() * songsLibrary.length)
+      const teamFirstTrack = songsLibrary.splice(initSongIndex, 1)[0]
+
+      updatedTeams[i + 1] = [teamFirstTrack].sort(
         // Ordenamos el tuneline por año de publicacion
         (a, b) => a.release_date.slice(0, 4) - b.release_date.slice(0, 4)
       )
 
+      // Establezco los nombres de los equipos
       const bandIndex = Math.floor(Math.random() * bandNames.length)
       updatedTeamInfo.push({
         name: bandNames[bandIndex],
@@ -52,12 +58,13 @@ function TeamSelection () {
         numberOfJokers: 3
       })
 
-      bandNames.splice(bandNames, 1)
+      bandNames.splice(bandIndex, 1)
     }
-
     setTeams(updatedTeams)
     setTeamInfo(updatedTeamInfo)
+    setSongs(songsLibrary)
 
+    // Establezco la infromación básica de la partida
     let updatedGameInfo = {}
     updatedGameInfo = {
       currentTeam: 1,
@@ -85,7 +92,7 @@ function TeamSelection () {
           <input
             type='number'
             min={1}
-            max={6}
+            max={5}
             name='numberOfTeams'
             autoComplete='off'
             required

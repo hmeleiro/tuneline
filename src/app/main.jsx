@@ -26,12 +26,12 @@ const theme = extendTheme({
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode> </React.StrictMode>
   <AuthProvider>
-    <WebPlayerProvider>
-      <GameProvider>
+    <GameProvider>
+      <WebPlayerProvider>
         <ChakraProvider theme={theme}>
           <App />
         </ChakraProvider>
-      </GameProvider>
-    </WebPlayerProvider>
+      </WebPlayerProvider>
+    </GameProvider>
   </AuthProvider>
 )

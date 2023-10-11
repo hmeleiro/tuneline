@@ -3,6 +3,8 @@ import { WebPlayerContext } from '../context/WebPlayerContext'
 import { AuthContext } from '../context/AuthContext'
 import { Text } from '@chakra-ui/react'
 
+const SPOTIFY_DEVICE_NAME = 'Tuneline Game'
+
 function SpotifyTransfer (props) {
   const { token } = props
 
@@ -20,7 +22,7 @@ function SpotifyTransfer (props) {
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
-        name: 'Tuneline Game',
+        name: SPOTIFY_DEVICE_NAME,
         getOAuthToken: (cb) => {
           cb(token)
         },
@@ -59,22 +61,11 @@ function SpotifyTransfer (props) {
         if (!state) {
           return
         }
-        console.log('state.paused:', state.paused)
-        // setPaused(state.paused)
+        setPaused(state.paused)
 
         player.getCurrentState().then((state) => {
           !state ? setActive(false) : setActive(true)
         })
-      })
-
-      player.addListener('player_state_changed', ({
-        position,
-        duration,
-        track_window: { current_track }
-      }) => {
-        console.log('Currently Playing', current_track)
-        console.log('Position in Song', position)
-        console.log('Duration of Song', duration)
       })
 
       player.connect()
@@ -105,8 +96,7 @@ function SpotifyTransfer (props) {
       }
     )
     const json = await devices.json()
-    const tunelineDevice = json.devices.find((d) => d.name === 'Tuneline Game')
-
+    const tunelineDevice = json.devices.find((d) => d.name === SPOTIFY_DEVICE_NAME)
     // Transfiero la reproducción al device_id
     fetch('https://api.spotify.com/v1/me/player', {
       method: 'PUT',

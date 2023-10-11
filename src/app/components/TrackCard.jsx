@@ -10,7 +10,8 @@ export function TrackCard (props) {
   const { scollToRef } = useContext(GameContext)
 
   const bgTeamColors = {
-    team0: 'bg-team0',
+    // team0: 'bg-team0',
+    team0: 'bg-white',
     team1: 'bg-team1',
     team2: 'bg-team2',
     team3: 'bg-team3',
@@ -29,9 +30,9 @@ export function TrackCard (props) {
 
   let isCorrect = ''
   if (track.isCorrect) {
-    isCorrect = 'outline outline-dashed outline-8 outline-correct surprise'
+    isCorrect = 'outline outline-4 outline-correct surprise'
   } else if (track.isCorrect === false) {
-    isCorrect = 'outline outline-dashed outline-8 outline-incorrect swing'
+    isCorrect = 'outline outline-4 outline-incorrect swing'
   }
 
   if (track.isHidden) {
@@ -45,16 +46,21 @@ export function TrackCard (props) {
 
   if (track.isCorrect) {
     // Square token for when the correct anwser is revealed
-    console.log(bgTeamColors[team])
     return (
       <div
-        ref={scollToRef}
-        className={`${bgTeamColors[team]} ${isCorrect} flex shadow-lg w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 2xl:w-46 2xl:h-46 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle p-1 overflow-hidden`}
+        style={{ '--image-url': `url(${track.album_image})` }}
+        className={`bg-[image:var(--image-url)] ${isCorrect} bg-cover bg-no-repeat flex shadow-xl p-0 border-2 border-black w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 2xl:w-46 2xl:h-46 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle overflow-hidden`}
       >
-        <div className='flex flex-col justify-center items-center'>
-          <p className={`${textTeamColors[team]} italic text-2xs sm:text-sm lg:text-md 2xl:text-md p-1`}>{track.track_name} </p>
-          <p className={`${textTeamColors[team]} font-bold text-lg sm:text-xl lg:text-2xl 2xl:text-2xl`}>{track.release_date} </p>
-          <p className={`${textTeamColors[team]} text-2xs sm:text-sm lg:text-md 2xl:text-md p-1`}>{track.artist_name} </p>
+        <div
+          ref={scollToRef}
+          className={`${bgTeamColors[team]} bg-opacity-80 h-full w-full`}
+          // className={`${bgTeamColors[team]} ${isCorrect} flex shadow-lg w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 2xl:w-46 2xl:h-46 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle p-1 overflow-hidden`}
+        >
+          <div className='flex flex-col justify-center items-center'>
+            <p className={`${textTeamColors[team]} font-bold italic text-2xs sm:text-sm lg:text-md 2xl:text-md p-1`}>{track.track_name} </p>
+            <p className={`${textTeamColors[team]} font-bold text-lg sm:text-xl lg:text-2xl 2xl:text-2xl`}>{track.release_date} </p>
+            <p className={`${textTeamColors[team]} font-bold text-2xs sm:text-sm lg:text-md 2xl:text-md p-1`}>{track.artist_name} </p>
+          </div>
         </div>
       </div>
     )
@@ -63,12 +69,17 @@ export function TrackCard (props) {
   return (
     // Square token for the already awnsered songs
     <div
-      className={`${bgTeamColors[team]} ${isCorrect} flex shadow-xl w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 2xl:w-46 2xl:h-46 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle p-1 overflow-hidden`}
+      style={{ '--image-url': `url(${track.album_image})` }}
+      className='bg-[image:var(--image-url)] bg-cover bg-no-repeat flex shadow-xl p-0 border-2 border-black w-24 h-24 overflow-x-auto  sm:w-32 sm:h-32 lg:w-40 lg:h-40 2xl:w-46 2xl:h-46 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle overflow-hidden'
     >
-      <div className='flex flex-col justify-center items-center'>
-        <p className='italic text-2xs sm:text-sm lg:text-md 2xl:text-md p-1'>{track.track_name} </p>
-        <p className='font-bold text-lg sm:text-xl lg:text-2xl 2xl:text-2xl'>{track.release_date} </p>
-        <p className='text-2xs sm:text-sm lg:text-md 2xl:text-md p-1'>{track.artist_name} </p>
+      <div
+        className={`${bgTeamColors[team]} bg-opacity-80 h-full w-full`}
+      >
+        <div className='bg-transparent flex flex-col justify-center items-center'>
+          <p className='italic text-2xs sm:text-sm lg:text-md 2xl:text-md p-1'>{track.track_name} </p>
+          <p className='font-bold text-lg sm:text-xl lg:text-2xl 2xl:text-2xl'>{track.release_date} </p>
+          <p className='text-2xs sm:text-sm lg:text-md 2xl:text-md p-1'>{track.artist_name} </p>
+        </div>
       </div>
     </div>
   )

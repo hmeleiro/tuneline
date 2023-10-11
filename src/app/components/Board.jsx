@@ -31,11 +31,11 @@ export default function Board () {
     setTeamInfo,
     teams,
     setTeams,
-    setRandomSong,
+    getRandomSong,
     scollToRef
   } = useContext(GameContext)
 
-  const { isPaused, togglePlay } = useContext(WebPlayerContext)
+  const { isPaused, togglePlay, setTrackInGame } = useContext(WebPlayerContext)
 
   const dropAnimation = {
     ...defaultDropAnimation
@@ -132,7 +132,7 @@ export default function Board () {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className='flex flex-col h-[80vh] items-center'>
+          <div className='flex flex-col h-[80vh] items-center justify-center'>
             <Container id='0' items={teams[0]} />
             <Container
               id='1'
@@ -249,10 +249,10 @@ export default function Board () {
     }))
 
     // Establezco una nueva canción de forma aleatoria
-    setRandomSong()
+    const randomSong = getRandomSong()
+    setTrackInGame(randomSong)
 
     // Si estaba sonando la música, la pauso
-    console.log(isPaused)
     if (!isPaused) {
       togglePlay()
     }
