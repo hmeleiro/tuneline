@@ -39,11 +39,11 @@ export function TrackCard (props) {
   }
 
   const vinylSizes = {
-    sm: '3rem',
-    md: '5rem',
-    lg: '6rem',
-    xl: '7rem',
-    '2xl': '8rem'
+    sm: '4rem',
+    md: '4rem',
+    lg: '5rem',
+    xl: '5.5rem',
+    '2xl': '7rem'
   }
 
   const windowSizes = (w) => {
