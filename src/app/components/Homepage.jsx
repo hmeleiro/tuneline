@@ -15,7 +15,7 @@ function HomePage () {
         </Heading>
         <Text maxWidth={400} align='center' fontSize='md' className='mb-2 ml-9 mr-9'>
           Tuneline es un juego por equipos que consiste en ordenar
-          cronológicamente canciones aleatorias.{' '}
+          cronológicamente las canciones que suenan.{' '}
           <b>
             El primer equipo que consiga colocar 10 canciones en su tuneline
             gana.

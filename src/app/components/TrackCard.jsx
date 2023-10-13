@@ -2,21 +2,31 @@ import React, { useContext } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GameContext } from '../context/GameContext'
+import { WebPlayerContext } from '../context/WebPlayerContext'
+import Vinyl from '../assets/icons/vinyl-2.svg?react'
 
 export function TrackCard (props) {
   const { track } = props
   const team = track.team ? `team${track.team}` : 'team0'
 
   const { scollToRef } = useContext(GameContext)
+  const { isPaused } = useContext(WebPlayerContext)
 
   const bgTeamColors = {
-    // team0: 'bg-team0',
     team0: 'bg-white',
     team1: 'bg-team1',
     team2: 'bg-team2',
     team3: 'bg-team3',
     team4: 'bg-team4',
     team5: 'bg-team5'
+  }
+  const vinylTeamColors = {
+    team0: 'white',
+    team1: '#76c3b7',
+    team2: '#c24a4f',
+    team3: '#d4bc40',
+    team4: '#14b249',
+    team5: '#f58e49'
   }
 
   const textTeamColors = {
@@ -28,6 +38,31 @@ export function TrackCard (props) {
     team5: 'text-white'
   }
 
+  const vinylSizes = {
+    sm: '3rem',
+    md: '5rem',
+    lg: '6rem',
+    xl: '7rem',
+    '2xl': '8rem'
+  }
+
+  const windowSizes = (w) => {
+    switch (true) {
+      case w <= 640:
+        return 'sm'
+      case w <= 768:
+        return 'md'
+      case w <= 1024:
+        return 'lg'
+      case w <= 1280:
+        return 'xl'
+      default:
+        return '2xl'
+    }
+  }
+
+  const windowWidth = window.innerWidth
+  const vinylSize = vinylSizes[windowSizes(windowWidth)]
   let isCorrect = ''
   if (track.isCorrect) {
     isCorrect = 'outline outline-4 outline-correct surprise'
@@ -38,8 +73,9 @@ export function TrackCard (props) {
   if (track.isHidden) {
     // Circle token of each team
     return (
-      <div
-        className={`${bgTeamColors[team]} ${isCorrect} w-12 h-12 md:w-20 md:h-20 shadow-xl rounded-full landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3`}
+      <Vinyl
+        fill={vinylTeamColors[team]} width={vinylSize} height={vinylSize} viewBox='0 0 512 512' stroke='black' strokeWidth='5'
+        className={`${vinylTeamColors[team]}} ${isPaused ? 'vinyl-shadow' : 'vinyl-animation'} landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 overflow-visible`}
       />
     )
   }
@@ -53,14 +89,11 @@ export function TrackCard (props) {
       >
         <div
           ref={scollToRef}
-          className={`${bgTeamColors[team]} bg-opacity-80 h-full w-full`}
-          // className={`${bgTeamColors[team]} ${isCorrect} flex shadow-lg w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 2xl:w-46 2xl:h-46 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle p-1 overflow-hidden`}
+          className={`${bgTeamColors[team]} flex flex-col justify-center items-center bg-opacity-80 h-full w-full`}
         >
-          <div className='flex flex-col justify-center items-center'>
-            <p className={`${textTeamColors[team]} font-bold italic text-2xs sm:text-sm lg:text-md 2xl:text-md p-1`}>{track.track_name} </p>
-            <p className={`${textTeamColors[team]} font-bold text-lg sm:text-xl lg:text-2xl 2xl:text-2xl`}>{track.release_date} </p>
-            <p className={`${textTeamColors[team]} font-bold text-2xs sm:text-sm lg:text-md 2xl:text-md p-1`}>{track.artist_name} </p>
-          </div>
+          <p className={`${textTeamColors[team]} font-bold italic text-2xs sm:text-sm lg:text-md 2xl:text-md p-1`}>{track.track_name} </p>
+          <p className={`${textTeamColors[team]} font-bold text-lg sm:text-xl lg:text-2xl 2xl:text-2xl`}>{track.release_date} </p>
+          <p className={`${textTeamColors[team]} font-bold text-2xs sm:text-sm lg:text-md 2xl:text-md p-1`}>{track.artist_name} </p>
         </div>
       </div>
     )
@@ -70,16 +103,14 @@ export function TrackCard (props) {
     // Square token for the already awnsered songs
     <div
       style={{ '--image-url': `url(${track.album_image})` }}
-      className='bg-[image:var(--image-url)] bg-cover bg-no-repeat flex shadow-xl p-0 border-2 border-black w-24 h-24 overflow-x-auto  sm:w-32 sm:h-32 lg:w-40 lg:h-40 2xl:w-46 2xl:h-46 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3 text-center text-black justify-center items-center align-middle overflow-hidden'
+      className='bg-[image:var(--image-url)] bg-cover bg-no-repeat flex shadow-xl p-0 border-2 border-black w-24 h-24 overflow-x-auto  sm:w-32 sm:h-32 lg:w-40 lg:h-40 2xl:w-46 2xl:h-46 touch-manipulation landscape:mr-3 landscape:ml-3 portrait:mt-3 portrait:mb-3  overflow-hidden'
     >
       <div
-        className={`${bgTeamColors[team]} bg-opacity-80 h-full w-full`}
+        className={`${bgTeamColors[team]} flex flex-col justify-center items-center text-center bg-opacity-80 h-full w-full `}
       >
-        <div className='bg-transparent flex flex-col justify-center items-center'>
-          <p className='italic text-2xs sm:text-sm lg:text-md 2xl:text-md p-1'>{track.track_name} </p>
-          <p className='font-bold text-lg sm:text-xl lg:text-2xl 2xl:text-2xl'>{track.release_date} </p>
-          <p className='text-2xs sm:text-sm lg:text-md 2xl:text-md p-1'>{track.artist_name} </p>
-        </div>
+        <p className='italic text-2xs sm:text-sm lg:text-md 2xl:text-md p-1'>{track.track_name} </p>
+        <p className='font-bold text-lg sm:text-xl lg:text-2xl 2xl:text-2xl'>{track.release_date} </p>
+        <p className='text-2xs sm:text-sm lg:text-md 2xl:text-md p-1'>{track.artist_name} </p>
       </div>
     </div>
   )
@@ -91,6 +122,7 @@ export function TrackCardOverlay (props) {
 }
 
 export default function SortableTrackCard (props) {
+  const { isHidden } = props.track
   const {
     attributes,
     listeners,
@@ -99,6 +131,7 @@ export default function SortableTrackCard (props) {
     transition,
     isDragging
   } = useSortable({ id: props.id, disabled: props.disabled })
+  console.log(isHidden)
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -113,6 +146,7 @@ export default function SortableTrackCard (props) {
       {...listeners}
       {...attributes}
       className='overflow-visible'
+      // className={isHidden ? 'overflow-hidden' : 'overflow-visible'}
     >
       <TrackCard id={props.id} track={props.track} />
     </div>

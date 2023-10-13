@@ -8,9 +8,8 @@ const GameProvider = ({ children }) => {
   const [boardState, setBoardState] = useState()
   const [teams, setTeams] = useState()
   const [teamInfo, setTeamInfo] = useState()
-  let selectedSongLibrary = songLibrary.sort(() => 0.5 - Math.random())
-  selectedSongLibrary = selectedSongLibrary.slice(0, 500)
-  const [songs, setSongs] = useState(selectedSongLibrary)
+  const [songs, setSongs] = useState(songLibrary)
+  const [screenSize, setScreenSize] = useState(getCurrentDimension())
 
   const ref = useRef(null)
   const scollToRef = useRef(null)
@@ -29,7 +28,7 @@ const GameProvider = ({ children }) => {
     window.localStorage.removeItem('gameInfo')
     window.localStorage.removeItem('teams')
     window.localStorage.removeItem('teamInfo')
-    window.localStorage.removeItem('gameState')
+    window.localStorage.removeItem('boardState')
 
     window.localStorage.setItem(
       'gameInfo',
@@ -42,6 +41,26 @@ const GameProvider = ({ children }) => {
     window.localStorage.setItem('teams', JSON.stringify([]))
     window.localStorage.setItem('songs', JSON.stringify(songLibrary))
     window.location.reload()
+  }
+
+  function getCurrentDimension () {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight
+    }
+  }
+
+  const buttonSize = (w) => {
+    switch (true) {
+      case w <= 640:
+        return 'xs'
+      case w <= 768:
+        return 'sm'
+      case w <= 1024:
+        return 'md'
+      default:
+        return 'lg'
+    }
   }
 
   return (
@@ -60,7 +79,11 @@ const GameProvider = ({ children }) => {
         getRandomSong,
         ref,
         scollToRef,
-        handleRestart
+        handleRestart,
+        screenSize,
+        setScreenSize,
+        getCurrentDimension,
+        buttonSize
       }}
     >
       {children}

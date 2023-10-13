@@ -9,7 +9,7 @@ import ChangeTrackButton from './ChangeTrackButton'
 
 function SideBarMenu (props) {
   const { handleFullScreen, isGameFinished } = props
-  const { teams } = useContext(GameContext)
+  const { buttonSize, screenSize } = useContext(GameContext)
 
   return (
     <div className='leading-3 w-[18px] absolute mr-0.5 mt-px portrait:right-[93%] landscape:right-[96%] top-[10%]'>
@@ -21,6 +21,7 @@ function SideBarMenu (props) {
             colorScheme='blue'
             onClick={handleFullScreen.exit}
             className='mb-3'
+            size={buttonSize(screenSize.width)}
           />
           )
         : (
@@ -30,9 +31,9 @@ function SideBarMenu (props) {
             colorScheme='blue'
             onClick={handleFullScreen.enter}
             className='mb-3'
+            size={buttonSize(screenSize.width)}
           />
           )}
-      {/* {isGameFinished ? <SpotifyControls track={teams[0][0]} /> : null} */}
       {isGameFinished ? <SpotifyControls /> : null}
       {isGameFinished ? <ScoreBoard /> : null}
       <RestartButton />

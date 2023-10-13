@@ -32,7 +32,7 @@ export default function Board () {
     teams,
     setTeams,
     getRandomSong,
-    scollToRef
+    scollToRef, screenSize, buttonSize
   } = useContext(GameContext)
 
   const { isPaused, togglePlay, setTrackInGame } = useContext(WebPlayerContext)
@@ -64,7 +64,7 @@ export default function Board () {
     // useSensor(PointerSensor)
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 400,
+        delay: 300,
         tolerance: 8
       }
     })
@@ -104,7 +104,7 @@ export default function Board () {
           ? (
             <div className='h-[10vh]'>
               <Button
-                colorScheme='blue'
+                colorScheme='blue' size={buttonSize(screenSize.width)}
                 onClick={handleSolve}
                 className='mt-3 mb-3'
               >

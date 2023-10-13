@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 
 function ScoreBoard () {
-  const { gameInfo, teams, teamInfo, setTeamInfo } = useContext(GameContext)
+  const { gameInfo, teams, teamInfo, setTeamInfo, buttonSize, screenSize } = useContext(GameContext)
 
   function changeJokers (team, add) {
     // Si se va a restar y el equipo ya tiene 0 comodines, no se hace nada
@@ -45,6 +45,7 @@ function ScoreBoard () {
           icon={<Icon as={MdScoreboard} w={5} h={5} color='white' />}
           colorScheme='blue'
           className='mb-3'
+          size={buttonSize(screenSize.width)}
         />
       </PopoverTrigger>
 
