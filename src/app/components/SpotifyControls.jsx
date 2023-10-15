@@ -6,11 +6,9 @@ import { FaPlay } from 'react-icons/fa'
 import { ImPause2 } from 'react-icons/im'
 import { IconButton, Icon } from '@chakra-ui/react'
 
-// import { IconContext } from 'react-icons';
-
 function SpotifyControls () {
   const { isPaused, togglePlay } = useContext(WebPlayerContext)
-  const { buttonSize, screenSize } = useContext(GameContext)
+  const { buttonSize, iconSize } = useContext(GameContext)
 
   return (
     <div className='mb-3'>
@@ -18,19 +16,20 @@ function SpotifyControls () {
         ? (
           <IconButton
             aria-label='Play music'
-            icon={<Icon as={FaPlay} w={5} h={5} />}
+            // icon={<Icon as={FaPlay} boxSize={iconSize(scale)} />}
+            icon={<Icon as={FaPlay} boxSize={iconSize() - 1} />}
             colorScheme='blue'
             onClick={togglePlay}
-            size={buttonSize(screenSize.width)}
+            size={buttonSize()}
           />
           )
         : (
           <IconButton
             aria-label='Pause music'
-            icon={<Icon as={ImPause2} w={5} h={5} />}
+            icon={<Icon as={ImPause2} boxSize={iconSize() - 1} />}
             colorScheme='blue'
             onClick={togglePlay}
-            size={buttonSize(screenSize.width)}
+            size={buttonSize()}
           />
           )}
     </div>

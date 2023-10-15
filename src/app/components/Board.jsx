@@ -69,16 +69,18 @@ export default function Board () {
       }
     })
   )
+
   return (
     <div className='flex flex-col justify-center h-screen w-screen'>
       {/* BOTONES DE PASAR EQUIPO Y RESOLVER */}
       <div className='flex flex-col items-center justify-center h-[10vh] mt-8'>
         <div className='flex items-center'>
-          <p className='text-lg font-bold'>
+          <p className='text-sm md:text-md lg:text-lg xl:text-xl font-bold'>
             Es el turno de{' '}
             <span className={`${teamColor}`}>
               {teamInfo[gameInfo.currentTeam].name}
             </span>{' '}
+            {/* <p>({teamInfo[gameInfo.currentTeam].numberOfJokers} comodines)</p> */}
           </p>
         </div>
 

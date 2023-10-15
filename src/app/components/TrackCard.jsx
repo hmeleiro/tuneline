@@ -131,7 +131,6 @@ export default function SortableTrackCard (props) {
     transition,
     isDragging
   } = useSortable({ id: props.id, disabled: props.disabled })
-  console.log(isHidden)
 
   const style = {
     transform: CSS.Transform.toString(transform),

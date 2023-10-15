@@ -8,20 +8,18 @@ import { GameContext } from '../context/GameContext'
 
 function ChangeTrackButton () {
   const { handleChangeTrack } = useContext(WebPlayerContext)
-  const { teamInfo, gameInfo, buttonSize, screenSize } = useContext(GameContext)
+  const { teamInfo, gameInfo, buttonSize, iconSize } = useContext(GameContext)
 
-  if (teamInfo[gameInfo.currentTeam].numberOfJokers <= 0) {
-    return
-  }
+  const isDisabled = teamInfo[gameInfo.currentTeam].numberOfJokers <= 0
 
   return (
     <IconButton
       onClick={handleChangeTrack}
       aria-label='Reset'
-      icon={<Icon as={PiMusicNotesFill} w={5} h={5} color='white' />}
+      icon={<Icon as={PiMusicNotesFill} boxSize={iconSize()} color='white' />}
       colorScheme='blue'
-      className='mb-3'
-      size={buttonSize(screenSize.width)}
+      className='mb-3' isDisabled={isDisabled}
+      size={buttonSize()}
     />
   )
 }

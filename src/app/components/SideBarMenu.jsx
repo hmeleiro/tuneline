@@ -9,7 +9,7 @@ import ChangeTrackButton from './ChangeTrackButton'
 
 function SideBarMenu (props) {
   const { handleFullScreen, isGameFinished } = props
-  const { buttonSize, screenSize } = useContext(GameContext)
+  const { buttonSize, iconSize } = useContext(GameContext)
 
   return (
     <div className='leading-3 w-[18px] absolute mr-0.5 mt-px portrait:right-[93%] landscape:right-[96%] top-[10%]'>
@@ -17,27 +17,27 @@ function SideBarMenu (props) {
         ? (
           <IconButton
             aria-label='Exit full screen'
-            icon={<Icon as={AiOutlineFullscreenExit} w={5} h={5} color='white' />}
+            icon={<Icon as={AiOutlineFullscreenExit} w={iconSize()} h={iconSize()} color='white' />}
             colorScheme='blue'
-            onClick={handleFullScreen.exit}
+            onClick={handleFullScreen?.exit}
             className='mb-3'
-            size={buttonSize(screenSize.width)}
+            size={buttonSize()}
           />
           )
         : (
           <IconButton
             aria-label='Enter full screen'
-            icon={<Icon as={AiOutlineFullscreen} w={5} h={5} color='white' />}
+            icon={<Icon as={AiOutlineFullscreen} w={iconSize()} h={iconSize()} color='white' />}
             colorScheme='blue'
-            onClick={handleFullScreen.enter}
+            onClick={handleFullScreen?.enter}
             className='mb-3'
-            size={buttonSize(screenSize.width)}
+            size={buttonSize()}
           />
           )}
       {isGameFinished ? <SpotifyControls /> : null}
       {isGameFinished ? <ScoreBoard /> : null}
       <RestartButton />
-      <ChangeTrackButton />
+      {isGameFinished ? <ChangeTrackButton /> : null}
     </div>
   )
 }

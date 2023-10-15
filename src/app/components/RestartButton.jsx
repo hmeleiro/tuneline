@@ -17,7 +17,7 @@ import { VscDebugRestart } from 'react-icons/vsc'
 import { Portal } from '@chakra-ui/portal'
 
 function RestartButton () {
-  const { handleRestart, ref, buttonSize, screenSize } = useContext(GameContext)
+  const { handleRestart, ref, buttonSize, iconSize } = useContext(GameContext)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
 
@@ -26,10 +26,10 @@ function RestartButton () {
       <IconButton
         onClick={onOpen}
         aria-label='Reset'
-        icon={<Icon as={VscDebugRestart} w={5} h={5} color='white' />}
+        icon={<Icon as={VscDebugRestart} boxSize={iconSize()} color='white' />}
         colorScheme='blue'
         className='mb-3'
-        size={buttonSize(screenSize.width)}
+        size={buttonSize()}
       />
       <Portal containerRef={ref}>
         <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} isCentered motionPreset='scale'>

@@ -147,10 +147,14 @@ function Game () {
     return (
       <>
         <FullScreen handle={handle} className='h-screen'>
-          <SideBarMenu HandleFullScreen={handle} />
-          <div className='flex flex-col items-center h-screen justify-center'>
-            ¡El equipo {teamInfo[gameInfo.winner].name} ha ganado!
-            <ScoreBoardEndScreen />
+          <div className='h-screen w-screen' ref={ref}>
+            <SideBarMenu handleFullScreen={handle} />
+            <div className='flex flex-col items-center h-screen justify-center'>
+              <p className='mb-3'>
+                ¡El equipo {teamInfo[gameInfo.winner].name} ha ganado!
+              </p>
+              <ScoreBoardEndScreen />
+            </div>
           </div>
 
         </FullScreen>
