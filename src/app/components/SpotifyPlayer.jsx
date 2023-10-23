@@ -5,13 +5,19 @@ import { Text } from '@chakra-ui/react'
 
 const SPOTIFY_DEVICE_NAME = 'Tuneline Game'
 
-function SpotifyTransfer (props) {
+function SpotifyTransfer(props) {
   const { token } = props
 
-  const { setPaused, isActive, setActive, isReady, setIsReady, setPlayer } =
-    useContext(WebPlayerContext)
-  const { refreshToken, getRefreshedToken } =
-    useContext(AuthContext)
+  const {
+    setPaused,
+    isActive,
+    setActive,
+    isReady,
+    setIsReady,
+    setPlayer,
+    setDeviceId
+  } = useContext(WebPlayerContext)
+  const { refreshToken, getRefreshedToken } = useContext(AuthContext)
 
   useEffect(() => {
     const script = document.createElement('script')
@@ -34,11 +40,13 @@ function SpotifyTransfer (props) {
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id)
         setIsReady(true)
+        setDeviceId(device_id)
       })
 
       player.addListener('not_ready', ({ device_id }) => {
         console.log('Device ID has gone offline', device_id)
         setIsReady(false)
+        setDeviceId(null)
       })
 
       player.addListener('initialization_error', ({ message }) => {
@@ -76,16 +84,16 @@ function SpotifyTransfer (props) {
     transferDevice()
 
     return (
-      <div className='flex flex-col items-center justify-center'>
-        <Text maxWidth={200} align='center' mb={2}>
+      <div className="flex flex-col items-center justify-center">
+        <Text maxWidth={200} align="center" mb={2}>
           Transfiriendo la reproducción de Spotify a este dispositivo.
         </Text>
-        <span className='loader' />
+        <span className="loader" />
       </div>
     )
   }
 
-  async function transferDevice () {
+  async function transferDevice() {
     // Identifico el device_id
     const devices = await fetch(
       'https://api.spotify.com/v1/me/player/devices',
@@ -96,7 +104,9 @@ function SpotifyTransfer (props) {
       }
     )
     const json = await devices.json()
-    const tunelineDevice = json.devices.find((d) => d.name === SPOTIFY_DEVICE_NAME)
+    const tunelineDevice = json.devices.find(
+      (d) => d.name === SPOTIFY_DEVICE_NAME
+    )
     // Transfiero la reproducción al device_id
     fetch('https://api.spotify.com/v1/me/player', {
       method: 'PUT',

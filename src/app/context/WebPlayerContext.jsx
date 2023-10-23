@@ -9,34 +9,32 @@ const WebPlayerProvider = ({ children }) => {
   const [isActive, setActive] = useState(false)
   const [isReady, setIsReady] = useState(false)
   const [player, setPlayer] = useState(undefined)
+  const [deviceId, setDeviceId] = useState(null)
   const { token } = useContext(AuthContext)
-  const { gameInfo, setTeams, setTeamInfo, setGameInfo, getRandomSong } = useContext(GameContext)
+  const { gameInfo, setTeams, setTeamInfo, setGameInfo, getRandomSong } =
+    useContext(GameContext)
 
   const authHeaders = {
     Authorization: 'Bearer ' + token
   }
 
   const setTrackInGame = (track, nextTeam = true) => {
-    console.log(track.release_date)
     // Changing the Teams state
     setTeams((prev) => {
       const updatedTeams = [...prev]
       updatedTeams[0] = [
-        nextTeam
-          // If nextTeam (usual behaviour) set song in team0 and pass turn to next team
+        nextTeam // If nextTeam (usual behaviour) set song in team0 and pass turn to next team
           ? {
               ...track,
               team:
-              gameInfo.currentTeam < gameInfo.numberOfTeams
-                ? gameInfo.currentTeam + 1
-                : 1
-            }
-          // If nextTeam is false (when ChangeTrackButton is pressed) set song in team0 but leave currentTeam
+                gameInfo.currentTeam < gameInfo.numberOfTeams
+                  ? gameInfo.currentTeam + 1
+                  : 1
+            } // If nextTeam is false (when ChangeTrackButton is pressed) set song in team0 but leave currentTeam
           : {
               ...track,
               team: gameInfo.currentTeam
             }
-
       ]
       return updatedTeams
     })
@@ -48,19 +46,19 @@ const WebPlayerProvider = ({ children }) => {
   }
 
   const playTrack = async (trackUri) => {
-    fetch('https://api.spotify.com/v1/me/player/play', {
+    const url = `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`
+    fetch(url, {
       method: 'PUT',
       headers: authHeaders,
       body: JSON.stringify({
         uris: [trackUri]
       })
+    }).catch((error) => {
+      console.log(error)
     })
-      .catch((error) => {
-        console.log(error)
-      })
   }
 
-  function togglePlay () {
+  function togglePlay() {
     player.getCurrentState().then(async (state) => {
       if (!state) {
         console.error('User is not playing music through the Web Playback SDK')
@@ -83,7 +81,7 @@ const WebPlayerProvider = ({ children }) => {
     })
   }
 
-  function handleChangeTrack () {
+  function handleChangeTrack() {
     if (!isPaused) {
       player.pause().then(() => {
         // setPaused(true)
@@ -92,7 +90,7 @@ const WebPlayerProvider = ({ children }) => {
     const randomSong = getRandomSong()
     setTrackInGame(randomSong, false)
 
-    setTeamInfo(prev => {
+    setTeamInfo((prev) => {
       const updatedTeamInfo = [...prev]
       updatedTeamInfo[gameInfo.currentTeam].numberOfJokers -= 1
       return updatedTeamInfo
@@ -110,6 +108,8 @@ const WebPlayerProvider = ({ children }) => {
         setIsReady,
         player,
         setPlayer,
+        deviceId,
+        setDeviceId,
         togglePlay,
         setTrackInGame,
         handleChangeTrack

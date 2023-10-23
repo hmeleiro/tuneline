@@ -30,7 +30,6 @@ const GameProvider = ({ children }) => {
     const initSongIndex = Math.floor(Math.random() * songsLibrary.length)
     const randomSong = songsLibrary.splice(initSongIndex, 1)[0]
     randomSong.isHidden = isHidden
-    console.log(randomSong.release_date)
     songsLibrary.splice(initSongIndex, 1)
     setSongs(songsLibrary)
     return randomSong

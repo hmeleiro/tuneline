@@ -16,13 +16,16 @@
     "react-hooks"
   ],
   "rules": {
+    "space-before-function-paren":"off",
     "react/prop-types": "off",
     "camelcase": [
       "error",
       {
         "properties": "never"
       }
-    ]
+    ],
+    "indent": ["error", 2, { "SwitchCase": 1 }, { "flatTernaryExpressions": true }],
+    "spaced-comment": 0
   },
   "settings": {
     "react": {
